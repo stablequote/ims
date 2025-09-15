@@ -1,34 +1,41 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import Home from './pages/Home'
+import PrivateRoute from './components/ProtectedRoute';
+import DashboardLayout from './components/DashboardLayout';
+import Login from './pages/Login'
+import Expenses from './pages/Expenses'
+import Distribution from './pages/Distribution'
+import Purchases from './pages/Purchases'
+import Merchants from './pages/Merchants';
+import Products from './pages/Products';
+import DistributionTickets from './pages/DistributionTickets';
+import NewDistribution from './pages/NewDistribution';
 import './App.css'
 
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+      <Router>
+        <Routes>
+            {/* <Route index  element={<Login />} /> */}
+            <Route element={<PrivateRoute allowedRoles={['owner', 'manager', 'staff']} />}>
+              <Route path="/" element={<DashboardLayout />}>
+                <Route path="home" element={<Home />} />
+                <Route path="purchases" element={<Purchases />} />
+                <Route path="expenses" element={<Expenses />} />
+                <Route path="merchants" element={<Merchants/>} />
+                <Route path="products" element={<Products/>} />
+                <Route path="distribution" >
+                  <Route path='new' element={<NewDistribution />} />
+                  <Route path='tickets' element={<DistributionTickets />} />
+                  <Route path='list' element={<Distribution />} />
+                </Route>
+              </Route>
+            </Route>
+          {/* Default Route */}
+          <Route path='/login' element={<Login />} />
+          {/* <Route path='/unauthorized' element={<UnAuthorized />} /> */}
+        </Routes>
+      </Router>
   )
 }
 
