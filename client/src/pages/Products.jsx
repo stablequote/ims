@@ -208,7 +208,7 @@ function Products() {
           color: "green"
         })
         setProductForm({})
-        // window.location.reload();
+        window.location.reload();
       } else {
         showNotification({
           title: "error",

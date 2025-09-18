@@ -23,15 +23,10 @@ const AppNavbar = () => {
   const role = user?.role;
 
   return (
-    <Navbar width={!isMobile ? { base: 250 } : 100} p="xs" sx={{ background: '#1D242E' }}>
+    <Navbar width={!isMobile ? { base: 200 } : 100} p="xs" sx={{ background: '#1D242E' }}>
       <NavLink to="/home" style={({ isActive }) => (isActive ? activeStyle : undefined)}>
         {t("Home")}
       </NavLink>
-
-      {/* <NavLink to="/inventory" style={({ isActive }) => (isActive ? activeStyle : undefined)}>
-        {t("INVENTORY")}
-      </NavLink> */}
-   
 
       {(role === "owner" || role === "manager") && (
         <NavLink to="/merchants" style={({ isActive }) => (isActive ? activeStyle : undefined)}>
@@ -39,6 +34,12 @@ const AppNavbar = () => {
         </NavLink>
       )}
 
+      <Divider size={1} my={10} />
+
+      <NavLink to="/products" style={({ isActive }) => (isActive ? activeStyle : undefined)}>
+        {t("PRODUCTS")}
+      </NavLink>
+      
       <Divider size={1} my={10} />
 
       <NavLink to="/purchases" style={({ isActive }) => (isActive ? activeStyle : undefined)}>
@@ -51,20 +52,12 @@ const AppNavbar = () => {
 
       <Divider size={1} my={10} />
 
-      <NavLink to="/products" style={({ isActive }) => (isActive ? activeStyle : undefined)}>
-        {t("PRODUCTS")}
-      </NavLink>
       
-      {/* <Accordion>
-        <Accordion.Control>DISTRIBUTION</Accordion.Control>
-        <Accordion.Item>
-          <Accordion.Panel>
-            <NavLink to="/distribution" style={({ isActive }) => (isActive ? activeStyle : undefined)}>
-              {t("DISTRIBUTION")}
-            </NavLink>
-          </Accordion.Panel>
-        </Accordion.Item>
-      </Accordion> */}
+      <NavLink to="/production" style={({ isActive }) => (isActive ? activeStyle : undefined)}>
+        {t("PRODUCTION & INVENTORY")}
+      </NavLink>
+
+      <Divider size={1} my={10} />
 
       <Accordion chevronPosition="right" p={0} >
         <Accordion.Item value='distribution' sx={{border: 0}}>
@@ -89,7 +82,6 @@ const AppNavbar = () => {
         </Accordion.Item>
       </Accordion>
     
-
       <Divider size={1} my={10} />
 
       {(role === "owner" || role === "manager") && (

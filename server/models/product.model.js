@@ -5,6 +5,10 @@ const productSchema = mongoose.Schema({
         type: String,
         required: true,
     },
+    inventory: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Inventory"
+    },
     wholePrice: {
         type: Number,
         required: true,

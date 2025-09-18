@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
-import {Button, Center, Container, Loader, Text} from '@mantine/core'
+import {Button, Center, Container, Loader, Text, Box, Flex, Tooltip} from '@mantine/core'
 import CustomTable from '../components/CustomTable'
 import { useTranslation } from 'react-i18next';
 import axios, { Axios } from 'axios';
@@ -7,42 +7,86 @@ import moment from 'moment';
 import ExpenseModal from '../components/ExpenseModal';
 import { showNotification } from '@mantine/notifications';
 import { IconCategory } from '@tabler/icons-react';
+import PurchaseModal from '../components/PurchaseModal'
 
 function Purchases() {
-  const { t } = useTranslation();
-  
-  const columns = useMemo(
-      () => [
-        { accessorKey: "description", header: t("Description"), size: 120},
-        { accessorKey: "totalCost", header: t("Amount"), size: 120},
-        { accessorKey: "paymentMethod", header: t("Payment-Method"), size: 30 },
-        { accessorKey: "createdBy", header: t("Created-By"), size: 30 },
-        {
-          accessorFn: (data) => moment(data.createdAt).format("DD-MM-YYYY h:mm a"),
-          id: "createdAt",
-          header: t("Date"),
-          size: 120,
-        },
-      ],
-      [t]
-  );
 
   const [purchases, setPurchases] = useState([]);
   const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false)
   const [purchaseForm, setPurchase] = useState({
-    item: {
-      name: '',
-      quantity: 0,
-      itemPrice: 0,
-      itemTotalPrice: 0,
-    },
+    // item: {
+    //   name: '',
+    //   quantity: 0,
+    //   itemPrice: 0,
+    //   itemTotalPrice: 0,
+    // },
     totalCost: 0,
     description: '',
     paymentMethod: '',
   })
+  
+  // state imports for MRT
+  const [selectedResult, setSelectedResult] = useState(null);
+  const [checkedRow, setCheckedRow] = useState([])
+  const [rowStatuses, setRowStatuses] = useState({});
+  const [selectedRow, setSelectedRow] = useState(null);
+  const [rowSelection, setRowSelection] = useState({});
+  // import ends here
 
-  const BASE_URL = import.meta.env.VITE_URL
+  const BASE_URL = import.meta.env.VITE_URL;
+  const { t } = useTranslation();
+
+  const columns = useMemo(
+    () => [
+      { accessorKey: "description", header: t("Description"), size: 120},
+      { accessorKey: "totalCost", header: t("Amount"), size: 120},
+      { accessorKey: "paymentMethod", header: t("Payment-Method"), size: 30 },
+      // { accessorKey: "createdBy", header: t("Created-By"), size: 30 },
+      {
+        accessorFn: (data) => moment(data.createdAt).format("DD-MM-YYYY h:mm a"),
+        id: "createdAt",
+        header: t("Date"),
+        size: 120,
+      },
+    ],
+    [t]
+  );
+
+  const customTableOptions = {
+    renderRowActions: ({ row }) => {
+      const rowId = row.original._id;
+      const status = rowStatuses[rowId] ?? row.original.status; // fallback to original status
+      // console.log(row.original.status)
+      // console.log(status)
+
+      return (
+        <Flex justify="Flex-start">
+          <Tooltip label="Delete">
+            <Button
+              mr="md"
+              color="red"
+              onClick={() => confirmDeleteRow(row)}
+              // disabled={isDone}
+              compact
+            >
+              Delete
+            </Button>
+          </Tooltip>
+          <Tooltip label="Edit">
+            <Button
+              color="blue"
+              onClick={() => handleActionClick(rowId)}
+              // disabled={isDone}
+              compact
+            >
+              Edit
+            </Button>
+          </Tooltip>
+        </Flex>
+      );
+    },
+  }
   
   const fetchPurchases = async (url) => {
       try {
@@ -119,15 +163,23 @@ function Purchases() {
       <Button color='yellow' mb="xs" onClick={() => setOpen(!open)}>New Purchase</Button>
       <CustomTable 
         columns={columns} 
-        data={purchases} 
+        data={purchases}
+        renderTopToolbarCustomActions={customTableOptions.renderTopToolbarCustomActions}
+        renderRowActions={customTableOptions.renderRowActions}
+        // onRowSelectionChange={customTableOptions.onRowSelectionChange}
+        onRowClick={(row) => setSelectedResult(row)}
+        rowSelection={rowSelection}
+        setRowSelection={setRowSelection}
+        checkedRow={checkedRow}
+        setCheckedRow={setCheckedRow}
       />
-      {/* <ExpenseModal 
+      <PurchaseModal
         open={open} 
         setOpen={setOpen} 
         purchaseForm={purchaseForm} 
         handleChange={handleChange} 
         handleSubmit={handleSubmit}
-      /> */}
+      />
        {loading &&
         <Center >
           <Loader variant="dots" size={36} color="green" />

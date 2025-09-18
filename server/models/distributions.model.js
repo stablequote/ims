@@ -10,6 +10,10 @@ const distributionSchema = mongoose.Schema({
             ref: 'Product'
         }
     ],
+    quantity: {
+        type: Number,
+        required: true,
+    },
     unitSalePrice: {
         type: Number,
         required: true,
@@ -24,14 +28,17 @@ const distributionSchema = mongoose.Schema({
     },
     paymentMethod: {
         type: String,
-        enum: ["Cash", "Bankak"],
-        default: "Cash",
-        required: true,
+        enum: ["Cash", "Bankak", "Later"],
+        // default: "Cash",
+        // required: true,
+    },
+    transactionNumber: {
+        type: String,
     },
     paymentStatus: {
         type: String,
-        enum: ["paid", "unpaid", "partial"],
-        default: "unpaid",
+        enum: ["Paid", "Pending", "Partial"],
+        default: "Pending",
         required: true,
     },
 }, { timestamps: true });

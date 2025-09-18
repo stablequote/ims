@@ -11,6 +11,8 @@ import Products from './pages/Products';
 import DistributionTickets from './pages/DistributionTickets';
 import NewDistribution from './pages/NewDistribution';
 import './App.css'
+import ProductionAndInventory from './pages/ProductionAndInventory';
+import Analytics from './pages/Analytics';
 
 function App() {
   return (
@@ -23,12 +25,14 @@ function App() {
                 <Route path="purchases" element={<Purchases />} />
                 <Route path="expenses" element={<Expenses />} />
                 <Route path="merchants" element={<Merchants/>} />
+                <Route path="production" element={<ProductionAndInventory/>} />
                 <Route path="products" element={<Products/>} />
                 <Route path="distribution" >
                   <Route path='new' element={<NewDistribution />} />
                   <Route path='tickets' element={<DistributionTickets />} />
                   <Route path='list' element={<Distribution />} />
                 </Route>
+                <Route path="analytics" element={<Analytics/>} />
               </Route>
             </Route>
           {/* Default Route */}

@@ -14,12 +14,19 @@ const CustomTable = ({
   rowActions,
   enablePagination = true,
   enableSorting = true,
+  renderTopToolbarCustomActions,
+  renderRowActions,
+  onRowSelectionChange,
+  handlePrintReceipt,
+  rowSelection,
+  setRowSelection,
+  checkedRow,
+  setCheckedRow,
   ...props
 }) => {
 
   const { t } = useTranslation();
-  const [rowSelection, setRowSelection] = useState({});
-
+  // const [rowSelection, setRowSelection] = useState({});
 
   const table = useMantineReactTable({
     columns: [
@@ -34,14 +41,15 @@ const CustomTable = ({
     ],
     data,
     initialState: {
-      pagination: { pageSize: 5 },
+      pagination: { pageSize: 10 },
       density: 'xs',
       sorting: [
         {
-          id: 'createdAt', // Sort by the 'orderDate' column
+          id: 'createdAt' || 'measuredAt' || 'registeredAt', // Sort by the 'orderDate' column
           desc: true, // Sort in descending order (newest first)
         },
       ],
+      showGlobalFilter: true,
     },
     enablePagination,
     enableSorting,
@@ -50,80 +58,30 @@ const CustomTable = ({
     columnFilterDisplayMode: 'popover',
     paginationDisplayMode: 'pages',
     positionToolbarAlertBanner: 'bottom',
+    renderTopToolbarCustomActions,
     getRowId: (row) => row._id || row.id,
-    onRowSelectionChange: setRowSelection,
+    onRowSelectionChange: (updater) => {
+      const newRowSelection =
+        typeof updater === 'function' ? updater(rowSelection) : updater;
+
+      setRowSelection(newRowSelection);
+
+      // If using MRT table instance (like with useMantineReactTable)
+      const selectedData = Object.keys(newRowSelection).map((rowId) =>
+        table.getRow(rowId).original
+      );
+
+      setCheckedRow(Object.keys(newRowSelection).map((rowId) =>
+        table.getRow(rowId).original
+      ))
+
+      console.log('✅ Selected row data:', selectedData);
+      console.log(checkedRow)
+    },
     state: {
     rowSelection,
   },
-    renderRowActions: ({ row, table }) => (
-      <div style={{ display: 'flex', gap: '8px' }}>
-        {/* Default edit icons */}
-        {table.options.enableEditing && (
-          <>
-            <Tooltip label="Edit">
-              <ActionIcon onClick={() => table.setEditingRow(row)}>
-                <IconEdit />
-              </ActionIcon>
-            </Tooltip>
-          </>
-        )}
-        {/* Custom delete button */}
-        <Tooltip label="Delete">
-          <ActionIcon color="red" onClick={() => handleDelete(row)}>
-            <IconTrash />
-          </ActionIcon>
-        </Tooltip>
-      </div>
-    ),
-     renderTopToolbarCustomActions: ({ table }) => (
-      <Box
-        sx={{
-          display: 'flex',
-          gap: '16px',
-          padding: '8px',
-          flexWrap: 'wrap',
-        }}
-      >
-        <Button
-          color="lightblue"
-          //export all data that is currently in the table (ignore pagination, sorting, filtering, etc.)
-          // onClick={}
-          leftIcon={<IconDownload />}
-          variant="filled"
-        >
-          {t("EXPORT-ALL-DATA")}
-        </Button>
-        <Button
-          disabled={table.getPrePaginationRowModel().rows.length === 0}
-          //export all rows, including from the next page, (still respects filtering and sorting)
-          // onClick={}
-          leftIcon={<IconDownload />}
-          variant="filled"
-        >
-          {t("EXPORT-ALL-ROWS")}
-        </Button>
-        <Button
-          disabled={table.getRowModel().rows.length === 0}
-          //export all rows as seen on the screen (respects pagination, sorting, filtering, etc.)
-          // onClick={}
-          leftIcon={<IconDownload />}
-          variant="filled"
-        >
-          {t("EXPORT-PAGE-ROWS")}
-        </Button>
-        <Button
-          disabled={
-            !table.getIsSomeRowsSelected() && !table.getIsAllRowsSelected()
-          }
-          //only export selected rows
-          // onClick={}
-          leftIcon={<IconDownload />}
-          variant="filled"
-        >
-          {t("EXPORT-SELECTED-ROWS")}
-        </Button>
-      </Box>
-    ),
+    renderRowActions,    
     mantineTableBodyRowProps: ({ row }) => ({
       onClick: onRowClick ? () => onRowClick(row.original) : undefined,
       style: {
@@ -133,21 +91,23 @@ const CustomTable = ({
     ...props,
   });
 
-  return <MantineReactTable table={table}
-            mantineEditTextInputProps={({ cell }) => ({
-              //onBlur is more efficient, but could use onChange instead
-              onBlur: (event) => {
-                handleSaveCell(cell, event.target.value);
-                console.log(cell)
-              },
-            })}
-            positionGlobalFilter="right"
-            mantineSearchTextInputProps={{
-              // placeholder: `Search ${data.length} rows`,
-              sx: { minWidth: '300px' },
-              variant: 'filled',
-            }}
-          />
+  return (
+    <MantineReactTable table={table}
+      mantineEditTextInputProps={({ cell }) => ({
+        //onBlur is more efficient, but could use onChange instead
+        onBlur: (event) => {
+          handleSaveCell(cell, event.target.value);
+          console.log(cell)
+        },
+      })}
+      positionGlobalFilter="right"
+      mantineSearchTextInputProps={{
+        // placeholder: `Search ${data.length} rows`,
+        sx: { minWidth: '300px' },
+        variant: 'filled',
+      }}
+    />
+  )
 };
 
 export default CustomTable;

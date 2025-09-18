@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
-import {Button, Center, Container, Loader, Text} from '@mantine/core'
+import {Button, Center, Container, Loader, Text, Flex, Tooltip} from '@mantine/core'
 import CustomTable from '../components/CustomTable'
 import { useTranslation } from 'react-i18next';
 import axios, { Axios } from 'axios';
@@ -9,6 +9,25 @@ import { showNotification } from '@mantine/notifications';
 import { IconCategory } from '@tabler/icons-react';
 
 function Expenses() {
+
+  const [expenses, setExpenses] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [open, setOpen] = useState(false)
+  const [expenseForm, setExpenseForm] = useState({
+    amount: 0,
+    description: '',
+    category: '',
+    paymentMethod: '',
+  })
+  // state imports for MRT
+  const [selectedResult, setSelectedResult] = useState(null);
+  const [checkedRow, setCheckedRow] = useState([])
+  const [rowStatuses, setRowStatuses] = useState({});
+  const [selectedRow, setSelectedRow] = useState(null);
+  const [rowSelection, setRowSelection] = useState({});
+  // import ends here
+
+  const BASE_URL = import.meta.env.VITE_URL;
   const { t } = useTranslation();
   
   const expensesColumns = useMemo(
@@ -27,31 +46,54 @@ function Expenses() {
       [t]
   );
 
-  const [expenses, setExpenses] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [open, setOpen] = useState(false)
-  const [expenseForm, setExpenseForm] = useState({
-    amount: 0,
-    description: '',
-    category: '',
-    paymentMethod: '',
-  })
+  const customTableOptions = {
+    renderRowActions: ({ row }) => {
+      const rowId = row.original._id;
+      const status = rowStatuses[rowId] ?? row.original.status; // fallback to original status
+      // console.log(row.original.status)
+      // console.log(status)
 
-  const BASE_URL = import.meta.env.VITE_URL
+      return (
+        <Flex justify="Flex-start">
+          <Tooltip label="Delete">
+            <Button
+              mr="md"
+              color="red"
+              onClick={() => confirmDeleteRow(row)}
+              // disabled={isDone}
+              compact
+            >
+              Delete
+            </Button>
+          </Tooltip>
+          <Tooltip label="Edit">
+            <Button
+              color="blue"
+              onClick={() => handleActionClick(rowId)}
+              // disabled={isDone}
+              compact
+            >
+              Edit
+            </Button>
+          </Tooltip>
+        </Flex>
+      );
+    },
+  }
   
   const fetchExpenses = async (url) => {
-      try {
-        setLoading(true);
-        const res = await axios.get(url);
-        console.log(res);
-        if(res.status === 200) {
-          setExpenses(res.data);
-          setLoading(false)
-        }
-      } catch (error) {
-        console.error('Error fetching inventory data:', error);
-        setSalesData([]); // Set to empty array in case of error
+    try {
+      setLoading(true);
+      const res = await axios.get(url);
+      console.log(res);
+      if(res.status === 200) {
+        setExpenses(res.data);
+        setLoading(false)
       }
+    } catch (error) {
+      console.error('Error fetching inventory data:', error);
+      setSalesData([]); // Set to empty array in case of error
+    }
   };
   
   useEffect(() => {
@@ -115,7 +157,15 @@ function Expenses() {
       <Button color='yellow' mb="xs" onClick={() => setOpen(!open)}>Add expense</Button>
       <CustomTable 
         columns={expensesColumns} 
-        data={expenses} 
+        data={expenses}
+        renderTopToolbarCustomActions={customTableOptions.renderTopToolbarCustomActions}
+        renderRowActions={customTableOptions.renderRowActions}
+        // onRowSelectionChange={customTableOptions.onRowSelectionChange}
+        onRowClick={(row) => setSelectedResult(row)}
+        rowSelection={rowSelection}
+        setRowSelection={setRowSelection}
+        checkedRow={checkedRow}
+        setCheckedRow={setCheckedRow}
       />
       <ExpenseModal 
         open={open} 

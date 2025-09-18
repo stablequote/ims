@@ -8,7 +8,7 @@ const path = require('path');
 const fs = require('fs');
 const os = require('os');
 
-// const DB_URI = process.env.DB_URI
+const DB_URL = process.env.DB_URL
 // const DB_LOCAL = process.env.DB_LOCAL
 
 const authRouter = require("./routes/auth.route")
@@ -16,6 +16,10 @@ const merchantsRouter = require("./routes/merchants.route")
 const expensesRouter = require("./routes/expenses.route")
 const purchasesRouter = require("./routes/purchases.route")
 const productsRouter = require("./routes/products.route")
+const productionRouter = require("./routes/production.route")
+const distributionsRouter = require("./routes/distributions.route")
+const inventoryRouter = require("./routes/inventory.route")
+const reportsRouter = require("./routes/reports.route")
 
 const connectDB = async () => {
   try {
@@ -50,6 +54,10 @@ app.use("/merchants", merchantsRouter)
 app.use("/expenses", expensesRouter)
 app.use("/purchases", purchasesRouter)
 app.use("/products", productsRouter)
+app.use("/production", productionRouter)
+app.use("/distributions", distributionsRouter)
+app.use("/inventory", inventoryRouter)
+app.use("/reports", reportsRouter)
 
 app.get("/test", (req, res) => {
   res.send("server is working")

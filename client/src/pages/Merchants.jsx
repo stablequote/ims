@@ -1,10 +1,11 @@
 import { useEffect, useState } from 'react'
-import { Box, Button, Container, Text } from '@mantine/core'
+import { Box, Button, Container, Text, Flex, Tooltip } from '@mantine/core'
 import { showNotification } from '@mantine/notifications';
 import CustomTable from '../components/CustomTable'
 import AddMerchantModal from '../components/AddMerchantModal';
 import axios from 'axios';
 import moment from 'moment'
+import { IconTicket } from '@tabler/icons-react';
 
 function Merchants() {
     const [ merchantsData, setMerchantsData ] = useState([])
@@ -16,6 +17,13 @@ function Merchants() {
         location: '',
         unitSalePrice: 0,
     })
+    // state imports for MRT
+    const [selectedResult, setSelectedResult] = useState(null);
+    const [checkedRow, setCheckedRow] = useState([])
+    const [rowStatuses, setRowStatuses] = useState({});
+    const [selectedRow, setSelectedRow] = useState(null);
+    const [rowSelection, setRowSelection] = useState({});
+    // import ends here
 
     const BASE_URL = import.meta.env.VITE_URL;
 
@@ -31,6 +39,42 @@ function Merchants() {
             )
         },
     ]
+
+      const customTableOptions = {
+      
+        renderRowActions: ({ row }) => {
+          const rowId = row.original._id;
+          const status = rowStatuses[rowId] ?? row.original.status; // fallback to original status
+          // console.log(row.original.status)
+          // console.log(status)
+    
+          return (
+            <Flex justify="space-between">
+              <Tooltip label="Delete">
+                <Button
+                  color="red"
+                  onClick={() => confirmDeleteRow(row)}
+                  // disabled={isDone}
+                  compact
+                >
+                  Delete
+                </Button>
+              </Tooltip>
+              <Tooltip label="Edit">
+                <Button
+                  color="blue"
+                  onClick={() => handleActionClick(rowId)}
+                  // disabled={isDone}
+                  compact
+                >
+                  Edit
+                </Button>
+              </Tooltip>
+            </Flex>
+          );
+        },
+      }
+    
 
     useEffect(() => async () => {
         try {
@@ -77,7 +121,18 @@ function Merchants() {
   return (
     <Container size="100%">
         <Button mb='sm' color="green" onClick={() => setOpened(!opened)}>Add Merchant</Button>
-        <CustomTable columns={columns} data={merchantsData} />
+        <CustomTable 
+            columns={columns} 
+            data={merchantsData}
+            // renderTopToolbarCustomActions={customTableOptions.renderTopToolbarCustomActions}
+            renderRowActions={customTableOptions.renderRowActions}
+            // onRowSelectionChange={customTableOptions.onRowSelectionChange}
+            onRowClick={(row) => setSelectedResult(row)}
+            rowSelection={rowSelection}
+            setRowSelection={setRowSelection}
+            checkedRow={checkedRow}
+            setCheckedRow={setCheckedRow}
+        />
         <AddMerchantModal 
             opened={opened} 
             setOpened={setOpened} 

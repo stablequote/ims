@@ -2,10 +2,10 @@ const Purchase = require('../models/purchases.model');
 
 exports.createPurchase = async (req, res) => {
     try {
-        console.log("Body", req.body)
-        const { items, totalCost, paymentMethod, description } = req.body;
+        // console.log("Body", req.body)
+        const { totalCost, paymentMethod, description } = req.body;
         const payload = {
-            items: items,
+            // items: items,
             totalCost,
             paymentMethod,
             description,

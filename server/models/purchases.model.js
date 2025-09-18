@@ -1,14 +1,14 @@
 const mongoose = require('mongoose');
 
 const purchaseSchema = mongoose.Schema({
-    items: [
-        {
-            name: { type: String, required: true }, 
-            quantity: { type: Number, required: true },
-            itemPrice: { type: Number, required: true },
-            itemTotalPrice: { type: Number }
-        },
-    ],
+    // items: [
+    //     {
+    //         name: { type: String, required: true }, 
+    //         quantity: { type: Number, required: true },
+    //         itemPrice: { type: Number, required: true },
+    //         itemTotalPrice: { type: Number }
+    //     },
+    // ],
     totalCost: {
         type: Number,
         required: true,
@@ -25,12 +25,3 @@ const purchaseSchema = mongoose.Schema({
 }, { timestamps: true });
 
 module.exports = mongoose.model('Purchase', purchaseSchema);
-
-//   quantity: {
-//         type: Number,
-//         required: true,
-//     },
-//     price: {
-//         type: Number,
-//         required: true,
-//     },
