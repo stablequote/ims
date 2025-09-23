@@ -8,6 +8,8 @@ const path = require('path');
 const fs = require('fs');
 const os = require('os');
 
+dotenv.config();
+
 const DB_URL = process.env.DB_URL
 // const DB_LOCAL = process.env.DB_LOCAL
 
@@ -23,7 +25,8 @@ const reportsRouter = require("./routes/reports.route")
 
 const connectDB = async () => {
   try {
-    await mongoose.connect('mongodb://127.0.0.1:27017/ims', {
+    console.log("Vercel URL: ", DB_URL)
+    await mongoose.connect(DB_URL, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
     });
@@ -64,7 +67,7 @@ app.get("/test", (req, res) => {
   console.log("test is working!!")
 })
 
-// running the server
+// running the server0
 app.listen(5003, () => {
   console.log("server running on port 5003")  
 })
