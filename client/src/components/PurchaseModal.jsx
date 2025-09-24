@@ -1,18 +1,20 @@
 import { Button, Container, Flex, Group, Modal, NumberInput, Select, TextInput } from '@mantine/core'
+import { DateInput, DatePickerInput } from '@mantine/dates'
 
 function PurchaseModal({ open, setOpen, purchaseForm, handleChange, handleSubmit }) {
   return (
-    <Modal title="Add Expense" size={800} opened={open} onClose={() => setOpen(!open)}>
+    <Modal title="إضافة شراء" size={800} opened={open} onClose={() => setOpen(!open)}>
         <Modal.Body>
           <Container size="lg">
-            <NumberInput 
+            <NumberInput
               label="Cost" 
               placeholder='type cost' 
               value={purchaseForm.totalCost} 
               onChange={(val) => handleChange("totalCost", val)}
               precision={2}
             />
-            <TextInput 
+            <TextInput
+              mt="md"
               label="Description" 
               placeholder='write description'  
               value={purchaseForm.description}
@@ -29,10 +31,17 @@ function PurchaseModal({ open, setOpen, purchaseForm, handleChange, handleSubmit
             <Select
               label="Category"
               placeholder="Choose category"
-              data={["Meal", "Fuel", "Bill", "Wage", "Other"]}
+              data={["Material"]}
               value={purchaseForm.category}
               onChange={(val) => handleChange("category", val)}
               dropdownPosition="top"
+            />
+            <DatePickerInput 
+              mt="md"
+              label="Date"
+              placeholder="Select Date"
+              value={purchaseForm.date}
+              onChange={(val) => handleChange("date", val)}
             />
             <Flex mt="xl"  mb={0} justify="space-between">
               <Button color="blue" onClick={handleSubmit}>Create</Button>

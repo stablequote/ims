@@ -1,8 +1,8 @@
 import { Button, Container, Flex, Group, Modal, NumberInput, Select, TextInput } from '@mantine/core'
-
+import { DateInput, DatePickerInput } from '@mantine/dates'
 function ExpenseModal({ open, setOpen, expenseForm ,handleChange, handleSubmit }) {
   return (
-    <Modal title="Add Expense" size={800} opened={open} onClose={() => setOpen(!open)}>
+    <Modal title="إضافة منصرف" size={800} opened={open} onClose={() => setOpen(!open)}>
         <Modal.Body>
           <Container size="lg">
             <NumberInput 
@@ -12,11 +12,12 @@ function ExpenseModal({ open, setOpen, expenseForm ,handleChange, handleSubmit }
               onChange={(val) => handleChange("amount", val)}
               precision={2}
             />
-            <TextInput 
-              label="Description" 
-              placeholder='write description'  
+            <TextInput
+              mt="md"
+              label="Description"
+              placeholder='write description'
               value={expenseForm.description}
-              onChange={(e) => handleChange("description", e.currentTarget.value)} 
+              onChange={(e) => handleChange("description", e.currentTarget.value)}
             />
             <Select
               my="md"
@@ -33,6 +34,13 @@ function ExpenseModal({ open, setOpen, expenseForm ,handleChange, handleSubmit }
               value={expenseForm.category}
               onChange={(val) => handleChange("category", val)}
               dropdownPosition="top"
+            />
+            <DatePickerInput 
+              mt="md"
+              label="Date"
+              placeholder="Select Date"
+              value={expenseForm.date}
+              onChange={(val) => handleChange("date", val)}
             />
             <Flex mt="xl"  mb={0} justify="space-between">
               <Button color="blue" onClick={handleSubmit}>Create</Button>

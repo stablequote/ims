@@ -1,4 +1,5 @@
 import { Button, Container, Flex, Modal, NumberInput, Select } from '@mantine/core'
+import { DatePickerInput } from '@mantine/dates'
 
 function AddProductionModal({ opened, setOpened, production, handleChange, handleSubmit, products }) {
   return (
@@ -25,6 +26,13 @@ function AddProductionModal({ opened, setOpened, production, handleChange, handl
           min={1}
           value={production.quantity}
           onChange={(val) => handleChange("quantity", val)}
+        />
+        <DatePickerInput
+          mt="md"
+          label="Date"
+          placeholder="Select Date"
+          value={production.date}
+          onChange={(val) => handleChange("date", val)}
         />
         <Flex justify="space-between" mt={70}>
           <Button onClick={handleSubmit}>Add</Button>
