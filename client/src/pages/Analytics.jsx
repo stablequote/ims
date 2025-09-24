@@ -11,24 +11,25 @@ function Analytics() {
 
     const fetchData = async (url) => {
         try {
-            setLoading(true);
+            console.log("From inside useEffect...")
+            setLoading(true)
             const res = await axios.get(url);
-            console.log(res.data)
             setData(res.data)           
-            setLoading(false)
         } catch (error) {
             showNotification({
                 title: "Error",
                 message: "Error loading data",
                 color: "red"
             })
+        } finally {
+            setLoading(false)
         }
     }
 
     useEffect(() => {
         const url = `${BASE_URL}/reports/analytics`;
         fetchData(url)
-    }, [data?.length])
+    }, [])
   return (
     <Container size="100%">
         <Title ta="center">Analytics Page</Title>

@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState, useTransition } from 'react'
-import { Box, Button, Container, Grid, Table, Text, Title, Flex, Tooltip } from '@mantine/core'
+import { Box, Button, Container, Grid, Table, Text, Title, Flex, Tooltip, Center, Loader } from '@mantine/core'
 import { showNotification } from '@mantine/notifications';
 import axios from 'axios';
 import AddProductionModal from '../components/AddProductionModal';
@@ -9,6 +9,7 @@ import { useTranslation } from 'react-i18next';
 
 function ProductionAndInventory() {
     const [opened, setOpened] = useState(false);
+    const [loading, setLoading] = useState(false);
     const [production, setProduction] = useState({
         product: '',
         quantity: 0,
@@ -113,14 +114,14 @@ function ProductionAndInventory() {
 
     const fetchData = async (productionUrl, productsUrl, distributionsUrl, inventoryUrl) => {
         try {
-            const productionResponse = await axios.get(productionUrl);
-            const productsResponse = await axios.get(productsUrl);
-            const distributionsResponse = await axios.get(distributionsUrl);
-            const inventoryResponse = await axios.get(inventoryUrl);
-
-            if(productionResponse.status === 200 || productionResponse.status === 304) {
-                setStock(productionResponse.data)
-            }
+            setLoading(true)
+            const [productionResponse, productsResponse, distributionsResponse, inventoryResponse] = await Promise.all([
+                axios.get(productionUrl),
+                axios.get(productsUrl),
+                axios.get(distributionsUrl),
+                axios.get(inventoryUrl),
+            ])
+            setStock(productionResponse.data)
             setProducts(productsResponse.data);
             setDistributions(distributionsResponse.data);
             setInvetory(inventoryResponse.data);
@@ -130,6 +131,8 @@ function ProductionAndInventory() {
                 message: "Error loading data",
                 color: "red"
             })
+        } finally {
+            setLoading(false)
         }
     }
 
@@ -139,7 +142,7 @@ function ProductionAndInventory() {
         const distributionsUrl = `${BASE_URL}/distributions/list`;
         const inventoryUrl = `${BASE_URL}/inventory/list`;
         fetchData(productionUrl, productsUrl, distributionsUrl, inventoryUrl)
-    }, [stock?.length])
+    }, [])
 
     const isToday = (dateString) => {
         const date = new Date(dateString);
@@ -189,6 +192,12 @@ function ProductionAndInventory() {
             production={production}
             products={products}
         />
+        {
+            loading &&
+            <Center>
+                <Loader size={32} color="green" variant='dots' />
+            </Center>
+        }
     </Container>
   )
 }

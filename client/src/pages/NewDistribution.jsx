@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Button, Container, Flex, NumberInput, Radio, Select, Stack, Text, TextInput, Title } from '@mantine/core'
+import { Button, Center, Container, Flex, Loader, NumberInput, Radio, Select, Stack, Text, TextInput, Title } from '@mantine/core'
 import { showNotification } from '@mantine/notifications';
 import axios from 'axios';
 import { NavLink, useNavigate } from 'react-router-dom';
@@ -21,6 +21,7 @@ function NewDistribution() {
   const [merchants, setMerchants] = useState([]);
   const [products, setProducts] = useState([]);
   const [opened, setOpened] = useState(false);
+  const [loading, setLoading] = useState(false)
 
   const navigate = useNavigate();
   const BASE_URL = import.meta.env.VITE_URL;
@@ -31,18 +32,21 @@ function NewDistribution() {
 
   const fetchData = async (merchantsUrl, productsUrl) => {
     try {
-      const merchantsResponse = await axios.get(merchantsUrl);
-      const productsResponse = await axios.get(productsUrl);
-      if(merchantsResponse.status === 200 || merchantsResponse.status === 304) {
-        setMerchants(merchantsResponse.data);
-        setProducts(productsResponse.data);
-      }
+      setLoading(true);
+      const [merchantsResponse, productsResponse] = await Promise.all([
+        axios.get(merchantsUrl),
+        axios.get(productsUrl),
+      ])
+      setMerchants(merchantsResponse.data);
+      setProducts(productsResponse.data);
     } catch (error) {
       showNotification({
         title: "Error",
         message: "An error occured while fetching data",
         color: "red"
       })
+    } finally {
+      setLoading(false)
     }
   }
 
@@ -197,6 +201,12 @@ function NewDistribution() {
         <Button color="blue" onClick={handleSubmit} >Submit</Button>
         <Button color="orange" variant='outline' rightIcon={<IconArrowForwardUp />} component={NavLink} to="/distribution/list" >Back</Button>
       </Flex>
+      {
+        loading && 
+        <Center>
+          <Loader size={32} color="green" variant="dots" />
+        </Center>
+      }
     </Container>
   )
 }
