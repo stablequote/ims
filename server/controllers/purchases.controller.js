@@ -3,7 +3,7 @@ const Purchase = require('../models/purchases.model');
 exports.createPurchase = async (req, res) => {
     try {
         // console.log("Body", req.body)
-        const { totalCost, paymentMethod, description } = req.body;
+        const { totalCost, paymentMethod, description, date } = req.body;
         const payload = {
             // items: items,
             totalCost,
@@ -11,6 +11,10 @@ exports.createPurchase = async (req, res) => {
             description,
         }
         console.log("Payload", payload)
+
+        if(date) {
+            payload.createdAt = new Date(date)
+        }
 
         const purchase = new Purchase(payload)
 

@@ -3,8 +3,18 @@ const Inventory = require("../models/inventory.model");
 
 exports.addProduction = async (req, res) => {
     try {
-        const { product, quantity, category } = req.body;
-        const newProduction = new Production({ product, quantity });
+        const { product, quantity, date } = req.body;
+
+        const payload = {
+            product,
+            quantity,
+        }
+        
+        if(date) {
+            payload.createdAt = date
+        }
+
+        const newProduction = new Production(payload);
         await newProduction.save();
         
         let inventory = await Inventory.findOne({ product })

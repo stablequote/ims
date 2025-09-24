@@ -4,7 +4,7 @@ const Production = require("../models/production.model");
 
 exports.createDistribution = async (req, res) => {
     try {
-        const { merchant, items, quantity, unitSalePrice, paidAmount, paymentMethod, transactionNumber, paymentStatus } = req.body;
+        const { merchant, items, quantity, unitSalePrice, paidAmount, paymentMethod, transactionNumber, paymentStatus, date } = req.body;
         const product = items.map((itm) => itm.product).toString();
         // const inventory = await Inventory.fineOne({ product });
         let inventory = await Inventory.findOne({ product })
@@ -30,6 +30,9 @@ exports.createDistribution = async (req, res) => {
                 paymentStatus,
                 totalAmount: unitSalePrice * quantity,
                 paidAmount,
+            }
+            if(date) {
+                payload.createdAt = date
             }
             const newDistribution = new Distributions(payload)
             await newDistribution.save()

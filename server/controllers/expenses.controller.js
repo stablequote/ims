@@ -2,17 +2,23 @@ const Expense = require('../models/expenses.model');
 
 exports.createExpense = async (req, res) => {
     try {
-        const { amount, description, category, paymentMethod  } = req.body;
-        console.log(amount, description)
+        const { amount, description, category, paymentMethod, date  } = req.body;
+        console.log(req.body)
 
-        const newExpense = new Expense({
+        const payload = {
             amount,
             description,
             category,
             paymentMethod
-        })
+        }
 
+        if(date) {
+            payload.createdAt = new Date(date)
+        }
+        
+        const newExpense = new Expense(payload)
         await newExpense.save();
+
         res.status(201).json({ message: "Expense created successfully", newExpense })
     } catch (error) {
         res.status(500).json({ error: "Failed to create expense" })
