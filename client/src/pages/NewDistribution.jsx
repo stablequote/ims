@@ -50,7 +50,7 @@ function NewDistribution() {
     }
   }
 
-  useEffect(() => async () => {
+  useEffect(() => {
     const merchantsUrl = `${BASE_URL}/merchants/list`;
     const productsUrl =  `${BASE_URL}/products/list`;
     fetchData(merchantsUrl, productsUrl)

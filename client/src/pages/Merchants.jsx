@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Box, Button, Container, Text, Flex, Tooltip } from '@mantine/core'
+import { Box, Button, Container, Text, Flex, Tooltip, Center, Loader } from '@mantine/core'
 import { showNotification } from '@mantine/notifications';
 import CustomTable from '../components/CustomTable'
 import AddMerchantModal from '../components/AddMerchantModal';
@@ -17,6 +17,8 @@ function Merchants() {
       location: '',
       unitSalePrice: 0,
   })
+  const [loading, setLoading] = useState(false);
+
   // state imports for MRT
   const [selectedResult, setSelectedResult] = useState(null);
   const [checkedRow, setCheckedRow] = useState([])
@@ -38,7 +40,7 @@ function Merchants() {
               <Box>{moment(cell.getValue()).format("DD-MMMM-YYYY HH:MM")}</Box>
           )
       },
-  ]
+  ];
 
   const customTableOptions = {
     renderRowActions: ({ row }) => {
@@ -73,73 +75,85 @@ function Merchants() {
         </Flex>
       );
     },
-  }
-  
-  useEffect(() => async () => {
-      try {
-          const url = `${BASE_URL}/merchants/list`;
-          const res = await axios.get(url);
-          console.log(res)
-          if(res.status === 200 || res.status === 304) {
-              setMerchantsData(res.data);
-          }
-      } catch (error) {
-          alert("Error occured while fetching merchants")
-      }
-  }, [merchantsData[0]?._id])
+  };
 
   const handleChange = (field, value) => {
     setMerchantForm((prev) => ({ ...prev, [field]: value }));
   };
 
+  const fetchData = async (url) => {
+    try {
+      setLoading(true)
+      const res = await axios.get(url);
+      setMerchantsData(res.data);
+    } catch (error) {
+      showNotification({
+        title: "Error",
+        message: "An error occured while fetching data",
+        color: "red"
+      })
+    } finally {
+      setLoading(false)
+    }
+  };
+  
+  useEffect(() => {
+    const url = `${BASE_URL}/merchants/list`;
+    fetchData(url)
+  }, [])
+
   const submitMerchantForm = async () => {
-      
-      try {
-          const url = `${BASE_URL}/merchants/create`
-          console.log("URL", url)
-          console.log(merchantForm)
-          const res = await axios.post(url, merchantForm)
-          if(res.status === 201) {
-              showNotification({
-                  title: 'Success',
-                  message: 'Merchant created succesfully',
-                  color: 'green'
-              })
-              setOpened(false)
-          }
-      } catch (error) {
-          showNotification({
-              title: 'Error creating a merchant',
-              message: error,
-              color: 'red'
-          })
-          console.log(error)
+    try {
+      const url = `${BASE_URL}/merchants/create`
+      console.log("URL", url)
+      console.log(merchantForm)
+      const res = await axios.post(url, merchantForm)
+      if(res.status === 201) {
+        showNotification({
+          title: 'Success',
+          message: 'Merchant created succesfully',
+          color: 'green'
+        })
+        setOpened(false)
       }
+    } catch (error) {
+      showNotification({
+        title: 'Error creating a merchant',
+        message: error,
+        color: 'red'
+      })
+    }
   }
 
   return (
     <Container size="100%">
-        <Button mb='sm' color="green" onClick={() => setOpened(!opened)}>Add Merchant</Button>
-        <CustomTable 
-            columns={columns} 
-            data={merchantsData}
-            // renderTopToolbarCustomActions={customTableOptions.renderTopToolbarCustomActions}
-            renderRowActions={customTableOptions.renderRowActions}
-            // onRowSelectionChange={customTableOptions.onRowSelectionChange}
-            onRowClick={(row) => setSelectedResult(row)}
-            rowSelection={rowSelection}
-            setRowSelection={setRowSelection}
-            checkedRow={checkedRow}
-            setCheckedRow={setCheckedRow}
-        />
-        <AddMerchantModal 
-            opened={opened} 
-            setOpened={setOpened} 
-            merchantForm={merchantForm} 
-            setMerchantForm={setMerchantForm} 
-            handleChange={handleChange} 
-            submitMerchantForm={submitMerchantForm}
-        />
+      <Button mb='sm' color="green" onClick={() => setOpened(!opened)}>Add Merchant</Button>
+      <CustomTable 
+        columns={columns} 
+        data={merchantsData}
+        // renderTopToolbarCustomActions={customTableOptions.renderTopToolbarCustomActions}
+        renderRowActions={customTableOptions.renderRowActions}
+        // onRowSelectionChange={customTableOptions.onRowSelectionChange}
+        onRowClick={(row) => setSelectedResult(row)}
+        rowSelection={rowSelection}
+        setRowSelection={setRowSelection}
+        checkedRow={checkedRow}
+        setCheckedRow={setCheckedRow}
+      />
+      <AddMerchantModal 
+        opened={opened} 
+        setOpened={setOpened} 
+        merchantForm={merchantForm} 
+        setMerchantForm={setMerchantForm} 
+        handleChange={handleChange} 
+        submitMerchantForm={submitMerchantForm}
+      />
+      {
+        loading &&
+        <Center>
+          <Loader size={36} color="green" variant='dots' />
+        </Center>
+      }
     </Container>
   )
 }
