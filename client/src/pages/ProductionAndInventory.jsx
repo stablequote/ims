@@ -111,20 +111,12 @@ function ProductionAndInventory() {
         }
     }
 
-    useEffect(() => async () => {
+    const fetchData = async (productionUrl, productsUrl, distributionsUrl, inventoryUrl) => {
         try {
-            const production = `${BASE_URL}/production/list`;
-            const productsUrl = `${BASE_URL}/products/list`;
-            const distributionsUrl = `${BASE_URL}/distributions/list`;
-            const invetoryUrl = `${BASE_URL}/inventory/list`;
-
-            const productionResponse = await axios.get(production);
+            const productionResponse = await axios.get(productionUrl);
             const productsResponse = await axios.get(productsUrl);
             const distributionsResponse = await axios.get(distributionsUrl);
-            const inventoryResponse = await axios.get(invetoryUrl);
-
-            console.log(productionResponse)
-            console.log(productsResponse)
+            const inventoryResponse = await axios.get(inventoryUrl);
 
             if(productionResponse.status === 200 || productionResponse.status === 304) {
                 setStock(productionResponse.data)
@@ -139,6 +131,14 @@ function ProductionAndInventory() {
                 color: "red"
             })
         }
+    }
+
+    useEffect(() => async () => {
+        const productionUrl = `${BASE_URL}/production/list`;
+        const productsUrl = `${BASE_URL}/products/list`;
+        const distributionsUrl = `${BASE_URL}/distributions/list`;
+        const inventoryUrl = `${BASE_URL}/inventory/list`;
+        fetchData(productionUrl, productsUrl, distributionsUrl, inventoryUrl)
     }, [stock?.length])
 
     const isToday = (dateString) => {

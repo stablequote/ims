@@ -29,22 +29,27 @@ function NewDistribution() {
     setDistributionForm((prev) => ({ ...prev, [field]: value }));
   };
 
-  useEffect(() => async () => {
+  const fetchData = async (merchantsUrl, productsUrl) => {
     try {
-      const merchantsUrl = `${BASE_URL}/merchants/list`;
-      const productsUrl =  `${BASE_URL}/products/list`;
-
       const merchantsResponse = await axios.get(merchantsUrl);
       const productsResponse = await axios.get(productsUrl);
-
-      setMerchants(merchantsResponse.data);
-      setProducts(productsResponse.data);
-
-      console.log("Merchants: ", merchantsResponse);
-      console.log("Products: ", productsResponse);
+      if(merchantsResponse.status === 200 || merchantsResponse.status === 304) {
+        setMerchants(merchantsResponse.data);
+        setProducts(productsResponse.data);
+      }
     } catch (error) {
-      alert(error)
+      showNotification({
+        title: "Error",
+        message: "An error occured while fetching data",
+        color: "red"
+      })
     }
+  }
+
+  useEffect(() => async () => {
+    const merchantsUrl = `${BASE_URL}/merchants/list`;
+    const productsUrl =  `${BASE_URL}/products/list`;
+    fetchData(merchantsUrl, productsUrl)
   }, [])
 
   const handleSubmit = async () => {

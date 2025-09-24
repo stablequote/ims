@@ -1,7 +1,7 @@
+import { useEffect, useState } from 'react'
 import { Box, Center, Container, Flex, Grid, Loader, Text, Title } from '@mantine/core'
 import { showNotification } from '@mantine/notifications';
 import axios from 'axios';
-import React, { useEffect, useState } from 'react'
 
 function Analytics() {
     const [data, setData] = useState([]);
@@ -9,10 +9,8 @@ function Analytics() {
 
     const BASE_URL = import.meta.env.VITE_URL;
 
-    useEffect(() => async () => {
-        console.log("Base Url: ", BASE_URL)
+    const fetchData = async (url) => {
         try {
-            const url = `${BASE_URL}/reports/analytics`;
             setLoading(true);
             const res = await axios.get(url);
             console.log(res.data)
@@ -25,7 +23,12 @@ function Analytics() {
                 color: "red"
             })
         }
-    }, [])
+    }
+
+    useEffect(() => {
+        const url = `${BASE_URL}/reports/analytics`;
+        fetchData(url)
+    }, [data?.length])
   return (
     <Container size="100%">
         <Title ta="center">Analytics Page</Title>
