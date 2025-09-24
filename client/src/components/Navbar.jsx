@@ -30,53 +30,53 @@ const AppNavbar = () => {
 
       {(role === "owner" || role === "manager") && (
         <NavLink to="/merchants" style={({ isActive }) => (isActive ? activeStyle : undefined)}>
-          {t("MERCHANTS")}
+          {t("العملاء")}
         </NavLink>
       )}
 
       <Divider size={1} my={10} />
 
       <NavLink to="/products" style={({ isActive }) => (isActive ? activeStyle : undefined)}>
-        {t("PRODUCTS")}
+        {t("المنتجات")}
       </NavLink>
       
       <Divider size={1} my={10} />
 
       <NavLink to="/purchases" style={({ isActive }) => (isActive ? activeStyle : undefined)}>
-        {t("PURCHASES")}
+        {t("المشتريات")}
       </NavLink>
 
        <NavLink to="/expenses" style={({ isActive }) => (isActive ? activeStyle : undefined)}>
-        {t("EXPENSES")}
+        {t("المنصرفات")}
       </NavLink>
 
       <Divider size={1} my={10} />
 
       
       <NavLink to="/production" style={({ isActive }) => (isActive ? activeStyle : undefined)}>
-        {t("PRODUCTION & INVENTORY")}
+        {t("الإنتاج والمخزن")}
       </NavLink>
 
       <Divider size={1} my={10} />
 
       <Accordion chevronPosition="right" p={0} >
         <Accordion.Item value='distribution' sx={{border: 0}}>
-          <Accordion.Control sx={{color: "white", width: "100%", padding: 6, "&:hover": { color: "black"}}}>DISTRIBUTION</Accordion.Control>
+          <Accordion.Control sx={{color: "white", width: "100%", padding: 6, "&:hover": { color: "black"}}}>التوزيع</Accordion.Control>
           <Accordion.Panel sx={{width: "100%"}}>
             <NavLink to="/distribution/new" style={({ isActive }) => (isActive ? activeStyle : undefined)}>
-              {t("New")}
+              {t("توزيع جديد")}
             </NavLink>
           </Accordion.Panel>
           <Accordion.Panel sx={{width: "100%"}}>
             <NavLink to="/distribution/tickets" style={({ isActive }) => (isActive ? activeStyle : undefined)}>
               {/* <IconScissorsOff size={36}/> */}
-              {t('Open Tickets')}
+              {t('الطلبات المعلقة')}
             </NavLink>
           </Accordion.Panel>
           <Accordion.Panel sx={{width: "100%"}}>
             <NavLink to="/distribution/list" style={({ isActive }) => (isActive ? activeStyle : undefined)}>
               {/* <IconScissorsOff size={36}/> */}
-              {t('List')}
+              {t('قائمة الطلبات')}
             </NavLink>
           </Accordion.Panel>
         </Accordion.Item>
@@ -86,7 +86,7 @@ const AppNavbar = () => {
 
       {(role === "owner" || role === "manager") && (
         <NavLink to="/analytics" style={({ isActive }) => (isActive ? activeStyle : undefined)}>
-          {t("ANALYTICS")}
+          {t("التحليلات")}
         </NavLink>
       )}
 
