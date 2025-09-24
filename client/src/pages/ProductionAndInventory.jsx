@@ -136,7 +136,7 @@ function ProductionAndInventory() {
         }
     }
 
-    useEffect(() => async () => {
+    useEffect(() => {
         const productionUrl = `${BASE_URL}/production/list`;
         const productsUrl = `${BASE_URL}/products/list`;
         const distributionsUrl = `${BASE_URL}/distributions/list`;
