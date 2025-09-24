@@ -18,6 +18,7 @@ function Expenses() {
     description: '',
     category: '',
     paymentMethod: '',
+    date: null,
   })
   // state imports for MRT
   const [selectedResult, setSelectedResult] = useState(null);
@@ -97,7 +98,7 @@ function Expenses() {
   };
   
   useEffect(() => {
-    const url = `http://localhost:5003/expenses/list`
+    const url = `${BASE_URL}/expenses/list`
     fetchExpenses(url)
   }, [])
 
@@ -108,8 +109,11 @@ function Expenses() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const url = `http://localhost:5003/expenses/create`;
-      const res = await axios.post(url, expenseForm)
+      const url = `${BASE_URL}/expenses/create`;
+      const res = await axios.post(url, {
+        ...expenseForm,
+        date: expenseForm.date.toISOString(),
+      })
       if(res.status === 201) {
         setOpen(false);
         showNotification({
@@ -154,7 +158,7 @@ function Expenses() {
     <Container size="100%">
       {/* <Text>Total expenses today: <strong>{totalTodayExpenses}</strong></Text> */}
 
-      <Button color='yellow' mb="xs" onClick={() => setOpen(!open)}>Add expense</Button>
+      <Button color='yellow' mb="xs" onClick={() => setOpen(!open)}>إضافة منصرف</Button>
       <CustomTable 
         columns={expensesColumns} 
         data={expenses}

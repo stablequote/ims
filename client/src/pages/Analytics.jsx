@@ -7,9 +7,12 @@ function Analytics() {
     const [data, setData] = useState([]);
     const [loading, setLoading] = useState(false);
 
+    const BASE_URL = import.meta.env.VITE_URL;
+
     useEffect(() => async () => {
+        console.log("Base Url: ", BASE_URL)
         try {
-            const url = `http://localhost:5003/reports/analytics`;
+            const url = `${BASE_URL}/reports/analytics`;
             setLoading(true);
             const res = await axios.get(url);
             console.log(res.data)

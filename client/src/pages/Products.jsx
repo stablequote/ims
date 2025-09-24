@@ -64,7 +64,7 @@ function Products() {
   }
 
   useEffect(()=> {
-    const url = `http://localhost:5003/products/list`
+    const url = `${BASE_URL}/products/list`
     fetchProducts(url)
   }, [])
 
@@ -146,9 +146,10 @@ function Products() {
       // console.log(status)
 
       return (
-        <Flex justify="space-between">
+        <Flex justify="flex-start">
           <Tooltip label="Delete">
             <Button
+              mr="md"
               color="red"
               onClick={() => confirmDeleteRow(row)}
               // disabled={isDone}

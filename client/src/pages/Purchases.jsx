@@ -24,6 +24,8 @@ function Purchases() {
     totalCost: 0,
     description: '',
     paymentMethod: '',
+    category: '',
+    date: null,
   })
   
   // state imports for MRT
@@ -104,7 +106,7 @@ function Purchases() {
   };
   
   useEffect(() => {
-    const url = `http://localhost:5003/purchases/list`
+    const url = `${BASE_URL}/purchases/list`
     fetchPurchases(url)
   }, [])
 
@@ -115,8 +117,12 @@ function Purchases() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const url = `http://localhost:5003/purchases/create`;
-      const res = await axios.post(url, purchaseForm)
+      const url = `${BASE_URL}/purchases/create`;
+      // console.log(purchaseForm.date?.toISOString());
+      const res = await axios.post(url, {
+        ...purchaseForm,
+        date: purchaseForm.date?.toISOString()
+      })
       if(res.status === 201) {
         setOpen(false);
         showNotification({
@@ -160,7 +166,7 @@ function Purchases() {
     <>
     <Container size="100%">
       {/* <Text>Total purchases today: <strong>{totalTodayExpenses}</strong></Text> */}
-      <Button color='yellow' mb="xs" onClick={() => setOpen(!open)}>New Purchase</Button>
+      <Button color='yellow' mb="xs" onClick={() => setOpen(!open)}>إضافة شراء</Button>
       <CustomTable 
         columns={columns} 
         data={purchases}

@@ -13,6 +13,7 @@ function ProductionAndInventory() {
         product: '',
         quantity: 0,
         category: '',
+        date: null,
     });
     const [stock, setStock] = useState([]);
     const [products, setProducts] = useState([]);
@@ -82,11 +83,12 @@ function ProductionAndInventory() {
 
     const handleSubmit = async () => {
         try {
-            const url = `http://localhost:5003/production/add`;
+            const url = `${BASE_URL}/production/add`;
             const payload = {
                 product: production.product,
                 quantity: production.quantity,
-                category: production.category
+                category: production.category,
+                date: production?.date?.toISOString() || null,
             }
             const res = await axios.post(url, payload);
             if(res.status === 201) {
@@ -111,10 +113,10 @@ function ProductionAndInventory() {
 
     useEffect(() => async () => {
         try {
-            const production = `http://localhost:5003/production/list`;
-            const productsUrl = `http://localhost:5003/products/list`;
-            const distributionsUrl = `http://localhost:5003/distributions/list`;
-            const invetoryUrl = `http://localhost:5003/inventory/list`;
+            const production = `${BASE_URL}/production/list`;
+            const productsUrl = `${BASE_URL}/products/list`;
+            const distributionsUrl = `${BASE_URL}/distributions/list`;
+            const invetoryUrl = `${BASE_URL}/inventory/list`;
 
             const productionResponse = await axios.get(production);
             const productsResponse = await axios.get(productsUrl);
@@ -151,8 +153,8 @@ function ProductionAndInventory() {
         <Grid>
             <Grid.Col span={9}>
                 <Box p="md" sx={{ border: "2px solid black"}}> 
-                    <Title ta="center">Production</Title>
-                    <Button mb="xs" color="green" onClick={() => setOpened(true)}>Add Production</Button>
+                    <Title ta="center">الإنتاج</Title>
+                    <Button mb="xs" color="green" onClick={() => setOpened(true)}>إضافة إنتاج</Button>
                     <CustomTable 
                         columns={productionColumns}
                         data={stock}
@@ -169,13 +171,13 @@ function ProductionAndInventory() {
             </Grid.Col>
             <Grid.Col span={3}>
                 <Box p="md" sx={{ border: "2px dotted black"}}>
-                    <Title mb="xl" ta="center">Inventory</Title>
+                    <Title mb="xl" ta="center">المخزن</Title>
                     {/* total production today - current stock - number of flips today */}
-                    <Text><strong>Total Production Today:</strong> {stock?.reduce((acc, p) => acc + p.quantity, 0)}</Text>
+                    <Text><strong>مجمل الإنتاج اليوم:</strong> {stock?.reduce((acc, p) => acc + p.quantity, 0)}</Text>
                     {/* const totalAdmissionCost = admissions.reduce((acc, a) => acc + a.totalCost, 0); */}
-                    <Text><strong>Current Stock:</strong> {inventory?.reduce((acc, p) => acc + p.stock, 0)}</Text>
-                    <Text><strong>Production Flips Today:</strong> {stock?.length}</Text>
-                    <Text><strong>Distributions Today:</strong> {distributions?.length}</Text>
+                    <Text><strong>المخزون الحالي:</strong> {inventory?.reduce((acc, p) => acc + p.stock, 0)}</Text>
+                    <Text><strong>قلبات الإنتاج اليوم:</strong> {stock?.length}</Text>
+                    <Text><strong>التوزيع اليوم:</strong> {distributions?.length}</Text>
                 </Box>
             </Grid.Col>
         </Grid>

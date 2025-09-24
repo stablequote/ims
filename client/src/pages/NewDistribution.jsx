@@ -4,6 +4,7 @@ import { showNotification } from '@mantine/notifications';
 import axios from 'axios';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { IconArrowBack, IconArrowForward, IconArrowForwardUp } from '@tabler/icons-react';
+import { DatePickerInput } from '@mantine/dates';
 
 function NewDistribution() {
   const [distributionForm, setDistributionForm] = useState({
@@ -15,12 +16,14 @@ function NewDistribution() {
     paymentMethod: '',
     paidAmount: 0,
     transactionNumber: '',
+    date: null,
   })
   const [merchants, setMerchants] = useState([]);
   const [products, setProducts] = useState([]);
   const [opened, setOpened] = useState(false);
 
   const navigate = useNavigate();
+  const BASE_URL = import.meta.env.VITE_URL;
 
   const handleChange = (field, value) => {
     setDistributionForm((prev) => ({ ...prev, [field]: value }));
@@ -28,8 +31,8 @@ function NewDistribution() {
 
   useEffect(() => async () => {
     try {
-      const merchantsUrl = `http://localhost:5003/merchants/list`;
-      const productsUrl =  `http://localhost:5003/products/list`;
+      const merchantsUrl = `${BASE_URL}/merchants/list`;
+      const productsUrl =  `${BASE_URL}/products/list`;
 
       const merchantsResponse = await axios.get(merchantsUrl);
       const productsResponse = await axios.get(productsUrl);
@@ -46,7 +49,7 @@ function NewDistribution() {
 
   const handleSubmit = async () => {
     try {
-      const url = `http://localhost:5003/distributions/create`;
+      const url = `${BASE_URL}/distributions/create`;
 
       const payload = {
         merchant: distributionForm.shopName,
@@ -59,20 +62,29 @@ function NewDistribution() {
           {product: distributionForm.product}
         ],
         paidAmount: distributionForm.paidAmount,
+        date: distributionForm?.date?.toISOString() || null,
       }
       console.log("Payload: ", payload);
 
       const res = await axios.post(url, payload);
+      console.log("Response: ", res)
       if(res.status === 201) {
         showNotification({
           title: "Success",
           message: "Distribution has been added successfully",
           color: "green"
         })
+        
         setOpened(false)
         // setStock(...prev, res.data)
-        setDistributionForm({})
+        // setDistributionForm({})
         navigate("/distribution/list")
+      } else {
+        showNotification({
+        title: "Server Error",
+        message: res.data.message,
+        color: "red"
+      })
       }
     } catch (error) {
       showNotification({
@@ -80,15 +92,14 @@ function NewDistribution() {
         message: error,
         color: "red"
       })
-      alert(error.message)
     }
   }
 
   return (
     <Container size="lg">
-      <Title>New Delivery</Title>
+      <Title ta="center" >توزيع جديد</Title>
       <Select 
-        mt="md"
+        // mt="md"
         label="Shop Name"
         placeholder="Select Shop"
         data={merchants?.map((merchant) => {
@@ -141,6 +152,13 @@ function NewDistribution() {
           value={distributionForm.paymentStatus}
           onChange={(e) => setDistributionForm(e.currentTarget.value)}
         /> */}
+
+        <DatePickerInput
+          label="Date"
+          placeholder="Select Date"
+          value={distributionForm.date}
+          onChange={(val) => handleChange("date", val)}
+        />
 
         <Select 
           label="Payment Status"

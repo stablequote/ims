@@ -93,7 +93,7 @@ function Distribution() {
   };
     
   useEffect(() => {
-    const url = `http://localhost:5003/distributions/list`
+    const url = `${BASE_URL}/distributions/list`
     fetchExpenses(url)
   }, [])
 
@@ -107,7 +107,7 @@ function Distribution() {
 
   return (
     <Container size="100%">
-      <Title>Distributions List</Title>
+      <Title ta="center" mb="xs">قائمة التوزيع</Title>
       <CustomTable
         columns={distributionColumns}
         data={distributions}

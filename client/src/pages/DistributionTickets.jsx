@@ -20,7 +20,7 @@ function DistributionTickets() {
   const [rowSelection, setRowSelection] = useState({});
   // import ends here
 
-  const BASE_URL = import.meta.env.VITE_URL
+  const BASE_URL = import.meta.env.VITE_URL;
   const { t } = useTranslation();
 
   const distributionColumns = useMemo(
@@ -58,7 +58,7 @@ function DistributionTickets() {
         leftIcon={<IconTicket />}
         variant="light"
       >
-        Close Ticket
+        إغلاق التذكرة
       </Button>
     </Box>
     ),
@@ -69,9 +69,10 @@ function DistributionTickets() {
       // console.log(status)
 
       return (
-        <Flex justify="space-between">
+        <Flex justify="flex-start">
           <Tooltip label="Delete">
             <Button
+              mr="md"
               color="red"
               onClick={() => confirmDeleteRow(row)}
               // disabled={isDone}
@@ -112,7 +113,7 @@ function DistributionTickets() {
   };
     
   useEffect(() => {
-    const url = `http://localhost:5003/distributions/list`
+    const url = `${BASE_URL}/distributions/list`
     fetchDistributions(url)
   }, [checkedRow[0]?._id])
 
@@ -127,7 +128,7 @@ function DistributionTickets() {
   const closeTicket = async (distributionId) => {
     try {
       console.log("Distribution ID: ", distributionId)
-      const url = `http://localhost:5003/distributions/close-ticket`;
+      const url = `${BASE_URL}/distributions/close-ticket`;
       const payload = {
         distributionId: distributionId,
         paymentMethod: "Bankak",
@@ -153,7 +154,7 @@ function DistributionTickets() {
 
   return (
     <Container size="100%">
-      <Title ta="center">Open Tickets</Title>
+      <Title ta="center" mb="xs">الطلبات المعلقة</Title>
       <CustomTable
         columns={distributionColumns}
         data={distributions}
