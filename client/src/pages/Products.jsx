@@ -56,11 +56,19 @@ function Products() {
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
 
   const fetchProducts = async (url) => {
-    const products = await axios.get(url);
-    console.log(products)
-    setLoading(!loading)
-    setData(products.data)
-    console.log(data)
+    try {
+      setLoading(true)
+      const products = await axios.get(url);
+      setData(products.data)
+    } catch (error) {
+      showNotification({
+        title: "Error",
+        message: "Error loading data",
+        color: "red"
+    })
+    } finally {
+      setLoading(false)
+    }
   }
 
   useEffect(()=> {
