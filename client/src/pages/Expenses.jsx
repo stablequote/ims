@@ -112,7 +112,7 @@ function Expenses() {
       const url = `${BASE_URL}/expenses/create`;
       const res = await axios.post(url, {
         ...expenseForm,
-        date: expenseForm.date.toISOString(),
+        date: expenseForm?.date?.toISOString() || null,
       })
       if(res.status === 201) {
         setOpen(false);
