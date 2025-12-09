@@ -28,6 +28,6 @@ router.get("/list", getProducts);
 router.get("/list/:id", getProduct);
 router.post("/create", /*upload.single("image"), */ createProduct);
 router.put("update/:id", /*upload.single("image"), */ updateProduct);
-router.delete("delete/:id", deleteProduct);
+router.delete("/:id", deleteProduct);
 
 module.exports = router;
