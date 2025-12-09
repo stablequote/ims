@@ -207,7 +207,7 @@ function Products() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const url = `http://localhost:5003/products/create`;
+      const url = `${BASE_URL}/products/create`;
       const res = await axios.post(url, productForm)
       if(res.status === 201) {
         setOpened(false);
