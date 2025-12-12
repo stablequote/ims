@@ -119,6 +119,7 @@ function NewDistribution() {
         })}
         value={distributionForm.shopName}
         onChange={(val) => handleChange("shopName", val)}
+        searchable
       />
       <Select 
         mt="md"
@@ -132,6 +133,7 @@ function NewDistribution() {
         })}
         value={distributionForm.product}
         onChange={(val) => handleChange("product", val)}
+        searchable
       />
       <NumberInput 
         mt="md"
