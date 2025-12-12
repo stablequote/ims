@@ -29,7 +29,7 @@ function Products() {
     { accessorKey: 'retailPrice', header: 'سعر البيع' },
     { accessorKey: 'createdAt', header: 'تاريخ الإضافة', size: 100,
       Cell: ({ cell }) => (
-        <Box>{moment(cell.getValue()).format("DD-MMMM-YYYY")}</Box>
+        <Box>{moment(cell.getValue()).format("DD-MM-YYYY h:mm a")}</Box>
     )},
   ];
 

@@ -35,9 +35,9 @@ function Merchants() {
       { accessorKey: "location", header: "Location" },
       { accessorKey: "phone", header: "Phone" },
       { accessorKey: "unitSalePrice", header: "Unit Price" },
-      { accessorKey: "createdAt", header: "Addet At", 
+      { accessorKey: "createdAt", header: "Added on", 
           Cell: ({ cell }) => (
-              <Box>{moment(cell.getValue()).format("DD-MMMM-YYYY HH:MM")}</Box>
+              <Box>{moment(cell.getValue()).format("DD-MM-YYYY h:mm a")}</Box>
           )
       },
   ];
