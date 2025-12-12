@@ -7,29 +7,31 @@ function PurchaseModal({ open, setOpen, purchaseForm, handleChange, handleSubmit
         <Modal.Body>
           <Container size="lg">
             <NumberInput
-              label="Cost" 
+              label="المبلغ" 
               placeholder='type cost' 
               value={purchaseForm.totalCost} 
               onChange={(val) => handleChange("totalCost", val)}
               precision={2}
+              hideControls
+              allowNegative={false}
             />
             <TextInput
               mt="md"
-              label="Description" 
+              label="الوصف" 
               placeholder='write description'  
               value={purchaseForm.description}
               onChange={(e) => handleChange("description", e.currentTarget.value)} 
             />
             <Select
               my="md"
-              label="Payment Method"
+              label="طريقة الدفع"
               placeholder="Pick payment method"
               data={["Cash", "Bankak"]}
               value={purchaseForm.paymentMethod}
               onChange={(val) => handleChange("paymentMethod", val)}
             />
             <Select
-              label="Category"
+              label="التصنيف"
               placeholder="Choose category"
               data={["Material"]}
               value={purchaseForm.category}
@@ -38,13 +40,13 @@ function PurchaseModal({ open, setOpen, purchaseForm, handleChange, handleSubmit
             />
             <DatePickerInput 
               mt="md"
-              label="Date"
+              label="التاريخ"
               placeholder="Select Date"
               value={purchaseForm.date}
               onChange={(val) => handleChange("date", val)}
             />
             <Flex mt="xl"  mb={0} justify="space-between">
-              <Button color="blue" onClick={handleSubmit}>Create</Button>
+              <Button color="green" onClick={handleSubmit}>إضافة</Button>
               <Button color="gray" onClick={() => setOpen(!open)}>Cancel</Button>
             </Flex>
           </Container>

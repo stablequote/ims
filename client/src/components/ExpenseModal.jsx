@@ -6,7 +6,7 @@ function ExpenseModal({ open, setOpen, expenseForm ,handleChange, handleSubmit }
         <Modal.Body>
           <Container size="lg">
             <NumberInput 
-              label="Amount" 
+              label="المبلغ" 
               placeholder='type amount' 
               value={expenseForm.amount} 
               onChange={(val) => handleChange("amount", val)}
@@ -14,21 +14,21 @@ function ExpenseModal({ open, setOpen, expenseForm ,handleChange, handleSubmit }
             />
             <TextInput
               mt="md"
-              label="Description"
+              label="الوصف"
               placeholder='write description'
               value={expenseForm.description}
               onChange={(e) => handleChange("description", e.currentTarget.value)}
             />
             <Select
               my="md"
-              label="Payment Method"
+              label="طريقة الدفع"
               placeholder="Pick payment method"
               data={["Cash", "Bankak"]}
               value={expenseForm.paymentMethod}
               onChange={(val) => handleChange("paymentMethod", val)}
             />
             <Select
-              label="Category"
+              label="الفئة"
               placeholder="Choose category"
               data={["Meal", "Fuel", "Bill", "Wage", "Other"]}
               value={expenseForm.category}
@@ -37,14 +37,14 @@ function ExpenseModal({ open, setOpen, expenseForm ,handleChange, handleSubmit }
             />
             <DatePickerInput 
               mt="md"
-              label="Date"
+              label="التاريخ"
               placeholder="Select Date"
               value={expenseForm.date}
               onChange={(val) => handleChange("date", val)}
             />
             <Flex mt="xl"  mb={0} justify="space-between">
-              <Button color="blue" onClick={handleSubmit}>Create</Button>
-              <Button color="gray" onClick={() => setOpen(!open)}>Cancel</Button>
+              <Button color="green" onClick={handleSubmit}>إضافة</Button>
+              <Button color="gray" onClick={() => setOpen(!open)}>إلغاء</Button>
             </Flex>
           </Container>
         </Modal.Body>
