@@ -14,7 +14,7 @@ function Expenses() {
   const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false)
   const [expenseForm, setExpenseForm] = useState({
-    amount: 0,
+    amount: undefined,
     description: '',
     category: '',
     paymentMethod: '',

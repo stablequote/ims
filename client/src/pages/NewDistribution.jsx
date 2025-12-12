@@ -10,8 +10,8 @@ function NewDistribution() {
   const [distributionForm, setDistributionForm] = useState({
     shopName: '',
     product: '',
-    quantity: 0,
-    unitSalePrice: 0,
+    quantity: undefined,
+    unitSalePrice: undefined,
     paymentStatus: '',
     paymentMethod: '',
     paidAmount: 0,

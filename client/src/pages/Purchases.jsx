@@ -21,7 +21,7 @@ function Purchases() {
     //   itemPrice: 0,
     //   itemTotalPrice: 0,
     // },
-    totalCost: 0,
+    totalCost: undefined,
     description: '',
     paymentMethod: '',
     category: '',
@@ -131,7 +131,7 @@ function Purchases() {
           color: "green"
         })
         setPurchase({})
-        // window.location.reload();
+        window.location.reload();
       } else {
         showNotification({
           title: "error",

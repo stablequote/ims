@@ -12,7 +12,7 @@ function ProductionAndInventory() {
     const [loading, setLoading] = useState(false);
     const [production, setProduction] = useState({
         product: '',
-        quantity: 0,
+        quantity: undefined,
         category: '',
         date: null,
     });
@@ -37,7 +37,7 @@ function ProductionAndInventory() {
         { accessorKey: "quantity", header: t("Quantity"), size: 120},
         { accessorKey: "createdAt", header: t("Production Time"), 
             Cell: ({cell}) => (
-            <Box>{moment(cell.getValue()).format("DD/MM/YYYY h:mm a")}</Box>
+            <Box>{moment(cell.getValue()).format("DD-MM-YYYY h:mm a")}</Box>
         )}
         ],
         [t]
@@ -101,7 +101,7 @@ function ProductionAndInventory() {
                 setOpened(false)
                 // setStock(...prev, res.data)
                 window.location.reload()
-                setProduction({})
+                // setProduction({})
             }
         } catch (error) {
             showNotification({
@@ -142,6 +142,7 @@ function ProductionAndInventory() {
         const distributionsUrl = `${BASE_URL}/distributions/list`;
         const inventoryUrl = `${BASE_URL}/inventory/list`;
         fetchData(productionUrl, productsUrl, distributionsUrl, inventoryUrl)
+        console.log("Today's Stock: ", stock?.filter((item) => isToday(item.createdAt)) || [])
     }, [])
 
     const isToday = (dateString) => {
@@ -151,6 +152,13 @@ function ProductionAndInventory() {
         const end = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59);
         return date >= start && date <= end;
     };
+
+    // Filter production that happened today
+    const todayStock = stock?.filter((item) => isToday(item.createdAt)) || [];
+
+    // Filter distributions of today
+    const todayDistributions = distributions?.filter((item) => isToday(item.createdAt)) || [];
+
   return (
     <Container size="100%" sx={{height: "80vh"}}>
         <Grid>
@@ -177,6 +185,7 @@ function ProductionAndInventory() {
                     <Title mb="xl" ta="center">المخزن</Title>
                     {/* total production today - current stock - number of flips today */}
                     <Text><strong>مجمل الإنتاج اليوم:</strong> {stock?.reduce((acc, p) => acc + p.quantity, 0)}</Text>
+                    {/* <Text><strong>مجمل الإنتاج اليوم:</strong> {todayStock}</Text> */}
                     {/* const totalAdmissionCost = admissions.reduce((acc, a) => acc + a.totalCost, 0); */}
                     <Text><strong>المخزون الحالي:</strong> {inventory?.reduce((acc, p) => acc + p.stock, 0)}</Text>
                     <Text><strong>قلبات الإنتاج اليوم:</strong> {stock?.length}</Text>
