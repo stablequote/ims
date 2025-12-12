@@ -92,11 +92,11 @@ const AppNavbar = () => {
 
       <Divider size={1} my={10} />
 
-      {(role === "owner" || role === "manager") && (
+      {/* {(role === "owner" || role === "manager") && (
       <NavLink to="/profile" style={({ isActive }) => (isActive ? activeStyle : undefined)}>
         {t("USERS MANAGEMENT")}
       </NavLink>
-      )}
+      )} */}
 
       <Button
         color="red"
