@@ -33,7 +33,7 @@ function DistributionTickets() {
       { accessorKey: "paymentStatus", header: t("Payment Status"), size: 30 },
       { accessorKey: "createdAt", header: t("Date"), 
         Cell: ({cell}) => (
-        <Box>{moment(cell.getValue()).format("DD/MM/YYYY h:mm a")}</Box>
+        <Box>{moment(cell.getValue()).format("DD-MM-YYYY h:mm a")}</Box>
       )}
     ],
     [t]
