@@ -11,6 +11,9 @@ const productionSchema = mongoose.Schema({
     },
     category: {
         type: String,
+    },
+    labor: {
+        type: String,
     }
 }, {timestamps: true});
 

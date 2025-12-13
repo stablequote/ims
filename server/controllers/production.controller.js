@@ -3,11 +3,12 @@ const Inventory = require("../models/inventory.model");
 
 exports.addProduction = async (req, res) => {
     try {
-        const { product, quantity, date } = req.body;
+        const { product, quantity, date, labor } = req.body;
 
         const payload = {
             product,
             quantity,
+            labor,
         }
         
         if(date) {
