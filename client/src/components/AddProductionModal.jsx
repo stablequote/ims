@@ -29,7 +29,7 @@ function AddProductionModal({ opened, setOpened, production, handleChange, handl
       <Select
         label="Labor"
         placeholder="Select labor"
-        data={["مازن", "محمد", "حسين"]}
+        data={["الباقر", "مازن", "مصعب", "محجوب", "أحمد"]}
         value={production.labor}
         onChange={(val) => handleChange("labor", val)}
         searchable
