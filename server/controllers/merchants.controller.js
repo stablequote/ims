@@ -41,16 +41,29 @@ exports.getAllMerchants = async (req, res) => {
 
 exports.deleteSingleMerchant = async (req, res) => {
     const { id } = req.params;
-    console.log(id)
+    console.log(req.params.merchantId)
 
     try {
-        const foundMerchant = Merchants.findByIdAndDelete(id);
+        const foundMerchant = await Merchants.findByIdAndDelete(req.params.merchantId);
         if(!foundMerchant) {
             res.status(404).json({ message: "No Merchants found!" })
-        } else {
-            res.status(200).json({ message: "Merchants successfully deleted!" })
         }
+        res.status(200).json({ message: "Merchants successfully deleted!" })
     } catch (error) {
         res.status(500).json({ error: "Failed to delete merchant!" })
     }
 }
+
+exports.updateMerchant = async (req, res) => {
+    try {
+        const { merchantId } = req.params;
+        const updates = req.body;
+
+        const updatedMerchant = await Merchants.findByIdAndUpdate(merchantId, updates, { new: true });
+        if (!updatedMerchant) return res.status(404).json({ message: 'Merchant not found.' });
+
+        res.status(200).json({ message: 'Merchant updated successfully.', merchant: updatedMerchant });
+    } catch (error) {
+        res.status(500).json({ error: 'Failed to update merchant.' });
+    }
+};
