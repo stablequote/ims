@@ -142,7 +142,11 @@ function ProductionAndInventory() {
         const distributionsUrl = `${BASE_URL}/distributions/list`;
         const inventoryUrl = `${BASE_URL}/inventory/list`;
         fetchData(productionUrl, productsUrl, distributionsUrl, inventoryUrl)
-        console.log("Today's Stock: ", stock?.filter((item) => isToday(item.createdAt)) || [])
+        console.log("Today's Stock: ", stock?.filter((item) => isToday(item.createdAt)).map((item) => item.quantity) || [])
+        const todayStock = stock?.filter((item) => isToday(item.createdAt)).reduce((acc, itm) => acc + itm.quantity, 0)
+        const todayProduction = stock?.filter((stock) => isToday(stock.createdAt)).length
+        console.log("Logging todayStock: ", todayStock)
+        console.log("Logging todayProduction: ", todayProduction)
     }, [])
 
     const isToday = (dateString) => {
@@ -154,10 +158,12 @@ function ProductionAndInventory() {
     };
 
     // Filter production that happened today
-    const todayStock = stock?.filter((item) => isToday(item.createdAt)) || [];
+    const todayStock = stock?.filter((item) => isToday(item.createdAt)).reduce((acc, itm) => acc + itm.quantity, 0)
 
     // Filter distributions of today
     const todayDistributions = distributions?.filter((item) => isToday(item.createdAt)) || [];
+
+    const todayProduction = stock?.filter((stock) => isToday(stock.createdAt)).length
 
   return (
     <Container size="100%" sx={{height: "80vh"}}>
@@ -184,11 +190,11 @@ function ProductionAndInventory() {
                 <Box p="md" sx={{ border: "2px dotted black"}}>
                     <Title mb="xl" ta="center">المخزن</Title>
                     {/* total production today - current stock - number of flips today */}
-                    <Text><strong>مجمل الإنتاج اليوم:</strong> {stock?.reduce((acc, p) => acc + p.quantity, 0)}</Text>
-                    {/* <Text><strong>مجمل الإنتاج اليوم:</strong> {todayStock}</Text> */}
-                    {/* const totalAdmissionCost = admissions.reduce((acc, a) => acc + a.totalCost, 0); */}
+                    <Text><strong>إجمالي الإنتاج:</strong> {stock?.reduce((acc, p) => acc + p.quantity, 0)}</Text>
+                    <Text><strong>مجمل الإنتاج اليوم:</strong> {todayStock}</Text>
                     <Text><strong>المخزون الحالي:</strong> {inventory?.reduce((acc, p) => acc + p.stock, 0)}</Text>
-                    <Text><strong>قلبات الإنتاج اليوم:</strong> {stock?.length}</Text>
+                    <Text><strong>قلبات الإنتاج الكلي:</strong> {stock?.length}</Text>
+                    <Text><strong>قلبات الإنتاج اليوم:</strong> {todayProduction}</Text>
                     <Text><strong>التوزيع اليوم:</strong> {distributions?.length}</Text>
                 </Box>
             </Grid.Col>
