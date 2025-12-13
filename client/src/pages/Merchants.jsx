@@ -55,7 +55,7 @@ function Merchants() {
             <Button
               mr="md"
               color="red"
-              onClick={() => confirmDeleteRow(row)}
+              onClick={() => handleDeleteMerchant(row)}
               // disabled={isDone}
               compact
             >
@@ -116,6 +116,7 @@ function Merchants() {
         })
         setOpened(false)
       }
+      window.location.reload()
     } catch (error) {
       showNotification({
         title: 'Error creating a merchant',
@@ -124,6 +125,57 @@ function Merchants() {
       })
     }
   }
+
+  const handleDeleteMerchant = async (row) => {
+    const confirmDialog = window.confirm("هل أنت متأكد من حذف عملية البيع هذه؟")
+    if(!confirmDialog) return;
+      try {
+        const id = row.original._id
+        console.log(id)
+        const url = `${BASE_URL}/merchants/delete/${id}`
+        const res = await axios.delete(url)
+        if(res.status === 200) {
+          showNotification({
+            title: "Success",
+            message: "Merchant successfully deleted",
+            color: "green"
+          })
+        }
+        window.location.reload()
+    } catch (error) {
+      showNotification({
+        title: "Error",
+        message: "Error occured while deleting merchant",
+        color: "red"
+      })
+    }
+  }
+  const handleEditMerchant = async (row) => {
+    const confirmDialog = window.confirm("هل أنت متأكد من حذف عملية البيع هذه؟")
+    if(!confirmDialog) return;
+      try {
+        const id = row.original._id
+        console.log(id)
+        const url = `${BASE_URL}/merchants/edit/${id}`
+        const res = await axios.put(url)
+        if(res.status === 200) {
+          showNotification({
+            title: "Success",
+            message: "Merchant details successfully updated",
+            color: "green"
+          })
+        }
+        window.location.reload()
+    } catch (error) {
+      showNotification({
+        title: "Error",
+        message: "Error occured while updating merchant details",
+        color: "red"
+      })
+    }
+  }
+
+  
 
   return (
     <Container size="100%">
