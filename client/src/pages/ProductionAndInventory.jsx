@@ -15,6 +15,7 @@ function ProductionAndInventory() {
         quantity: undefined,
         category: '',
         date: null,
+        labor: "",
     });
     const [stock, setStock] = useState([]);
     const [products, setProducts] = useState([]);
@@ -35,6 +36,7 @@ function ProductionAndInventory() {
         () => [
         { accessorKey: "product.name", header: t("Product"), size: 120},
         { accessorKey: "quantity", header: t("Quantity"), size: 120},
+        { accessorKey: "labor", header: t("Labor"), size: 120},
         { accessorKey: "createdAt", header: t("Production Time"), 
             Cell: ({cell}) => (
             <Box>{moment(cell.getValue()).format("DD-MM-YYYY h:mm a")}</Box>
@@ -90,6 +92,7 @@ function ProductionAndInventory() {
                 quantity: production.quantity,
                 category: production.category,
                 date: production?.date?.toISOString() || null,
+                labor: production.labor,
             }
             const res = await axios.post(url, payload);
             if(res.status === 201) {
