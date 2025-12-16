@@ -11,7 +11,6 @@ function Analytics() {
 
     const fetchData = async (url) => {
         try {
-            console.log("From inside useEffect...")
             setLoading(true)
             const res = await axios.get(url);
             setData(res.data)           
@@ -129,7 +128,7 @@ function Analytics() {
             </Grid.Col>
             <Grid.Col span={4} sx={{border: "2px solid black"}}>
                 <Box p="md" sx={{border: "2px solid black"}}>
-                    <Text>Net Revenue Today</Text>
+                    <Text>Income Today</Text>
                     <Text><strong>SDG {Math.floor(data?.revenue?.netToday) || 0}</strong></Text>
                 </Box>
             </Grid.Col>
