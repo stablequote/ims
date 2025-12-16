@@ -28,7 +28,7 @@ function Login() {
         localStorage.setItem("user", JSON.stringify(res.data.user));
         console.log("User logged is:", res.data.user)
         setLoading(!loading)
-        navigate("/home"); // Redirect to dashboard after login
+        navigate("/production"); // Redirect to dashboard after login
         console.log(res.data.token);
       } else if (res.status === 401) {
         showNotification({

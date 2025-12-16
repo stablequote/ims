@@ -24,9 +24,9 @@ const AppNavbar = () => {
 
   return (
     <Navbar width={!isMobile ? { base: 200 } : 100} p="xs" sx={{ background: '#1D242E' }}>
-      <NavLink to="/home" style={({ isActive }) => (isActive ? activeStyle : undefined)}>
+      {/* <NavLink to="/home" style={({ isActive }) => (isActive ? activeStyle : undefined)}>
         {t("Home")}
-      </NavLink>
+      </NavLink> */}
 
       {(role === "owner" || role === "manager") && (
         <NavLink to="/merchants" style={({ isActive }) => (isActive ? activeStyle : undefined)}>
