@@ -148,8 +148,18 @@ function ProductionAndInventory() {
         console.log("Today's Stock: ", stock?.filter((item) => isToday(item.createdAt)).map((item) => item.quantity) || [])
         const todayStock = stock?.filter((item) => isToday(item.createdAt)).reduce((acc, itm) => acc + itm.quantity, 0)
         const todayProduction = stock?.filter((stock) => isToday(stock.createdAt)).length
+        
+        // التوزيعات غير المدفوعة - التوزيعات اليوم - توزيعات اليوم غير المدفوعة - إجمالي التوزيعات
+        const openDistributions = distributions?.filter((dist) => dist.paymentStatus === "Paid").length
+        const totalDistributionsToday = distributions?.filter((dist) => isToday(dist.createdAt)).length
+        const totalOpenDistributionsToday = distributions?.filter((dist) => isToday(dist.createdAt)).filter((dist) => dist.paymentStatus === "Pending").length
+        const totalDistributions = distributions?.length
         console.log("Logging todayStock: ", todayStock)
         console.log("Logging todayProduction: ", todayProduction)
+        console.log("Logging openDistributions: ", openDistributions)
+        console.log("Logging totalDistributionsToday: ", totalDistributionsToday)
+        console.log("Logging totalOpenDistributionsToday: ", totalOpenDistributionsToday)
+        console.log("Logging totalDistributions: ", totalDistributions)
     }, [])
 
     const isToday = (dateString) => {
@@ -167,6 +177,11 @@ function ProductionAndInventory() {
     const todayDistributions = distributions?.filter((item) => isToday(item.createdAt)) || [];
 
     const todayProduction = stock?.filter((stock) => isToday(stock.createdAt)).length
+
+    const openDistributions = distributions?.filter((dist) => dist.paymentStatus === "Paid").length
+    const totalDistributionsToday = distributions?.filter((dist) => isToday(dist.createdAt)).length
+    const totalOpenDistributionsToday = distributions?.filter((dist) => isToday(dist.createdAt)).filter((dist) => dist.paymentStatus === "Pending").length
+    const totalDistributions = distributions?.length
 
   return (
     <Container size="100%" sx={{height: "80vh"}}>
@@ -193,12 +208,17 @@ function ProductionAndInventory() {
                 <Box p="md" sx={{ border: "2px dotted black"}}>
                     <Title mb="xl" ta="center">المخزن</Title>
                     {/* total production today - current stock - number of flips today */}
+                    <Text><strong>المخزون الحالي:</strong> {inventory?.reduce((acc, p) => acc + p.stock, 0)}</Text>
+                    <br></br>
                     <Text><strong>إجمالي الإنتاج:</strong> {stock?.reduce((acc, p) => acc + p.quantity, 0)}</Text>
                     <Text><strong>مجمل الإنتاج اليوم:</strong> {todayStock}</Text>
-                    <Text><strong>المخزون الحالي:</strong> {inventory?.reduce((acc, p) => acc + p.stock, 0)}</Text>
                     <Text><strong>قلبات الإنتاج الكلي:</strong> {stock?.length}</Text>
                     <Text><strong>قلبات الإنتاج اليوم:</strong> {todayProduction}</Text>
-                    <Text><strong>التوزيع اليوم:</strong> {distributions?.length}</Text>
+                    <br></br>
+                    <Text><strong>التوزيعات غير المدفوعة: </strong> {openDistributions}</Text>
+                    <Text><strong>التوزيع اليوم:</strong> {totalDistributionsToday}</Text>
+                    <Text><strong>توزيعات اليوم غير المدفوعة: </strong> {totalOpenDistributionsToday}</Text>
+                    <Text><strong>إجمالي التوزيعات: </strong> {totalDistributions}</Text>
                 </Box>
             </Grid.Col>
         </Grid>
