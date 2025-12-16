@@ -32,7 +32,7 @@ exports.getSingleMerchant = async (req, res) => {
 
 exports.getAllMerchants = async (req, res) => {
     try {
-        const merchants = await Merchants.find({});
+        const merchants = await Merchants.find().sort({ createdAt: -1 });
         res.status(200).json(merchants);
     } catch (error) {
         res.status(500).json({ error: 'Failed to get all merchants.' });

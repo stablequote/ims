@@ -43,7 +43,7 @@ exports.listSingleExpense = async (req, res) => {
 
 exports.listTodayExpenses = async (req, res) => {
     try {
-        const expenses = await Expense.find({});
+        const expenses = await Expense.find().sort({ createdAt: -1 });
 
         const isToday = (dateString) => {
         const date = new Date(dateString);
@@ -63,7 +63,7 @@ exports.listTodayExpenses = async (req, res) => {
 
 exports.listAllExpenses = async (req, res) => {
     try {
-        const expenses = await Expense.find({});
+        const expenses = await Expense.find().sort({ createdAt: -1 });
         res.status(200).json(expenses);
     } catch (error) {
         res.status(500).json({ error: 'Failed to list expenses.' });

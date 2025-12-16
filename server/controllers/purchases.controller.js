@@ -43,7 +43,7 @@ exports.listSinglePurchase = async (req, res) => {
 
 exports.listTodayPurchases = async (req, res) => {
     try {
-        const purchases = await Purchase.find({});
+        const purchases = await Purchase.find().sort({ createdAt: -1 });
 
         const isToday = (dateString) => {
         const date = new Date(dateString);
@@ -63,7 +63,7 @@ exports.listTodayPurchases = async (req, res) => {
 
 exports.listAllPurchases = async (req, res) => {
     try {
-        const purchases = await Purchase.find({});
+        const purchases = await Purchase.find().sort({ createdAt: -1 });
         res.status(200).json(purchases);
     } catch (error) {
         res.status(500).json({ error: 'Failed to list purchases.' });

@@ -38,7 +38,8 @@ exports.addProduction = async (req, res) => {
 
 exports.getProductions = async (req, res) => {
     try {
-        const productions = await Production.find({})
+        const productions = await Production.find()
+        .sort({ createdAt: -1 })
         .populate('product')
         .lean();
         if(!productions) {

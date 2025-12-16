@@ -48,7 +48,7 @@ exports.createDistribution = async (req, res) => {
 
 exports.getDistributions = async (req, res) => {
     try {
-        const distributions = await Distributions.find({})
+        const distributions = await Distributions.find().sort({ createdAt: -1 })
         .populate('items')
         .populate('merchant')
         .lean()
