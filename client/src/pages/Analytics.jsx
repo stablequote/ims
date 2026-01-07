@@ -32,10 +32,13 @@ function Analytics() {
   return (
     <Container size="100%">
         <Title ta="center">Analytics Page</Title>
-        <Grid mt="md">
+        <Grid mt="md" sx={{'@media (max-width: 450px)': {
+          display: "flex",
+          flexDirection: "column"
+        },}}>
             <Grid.Col span={4} sx={{border: "2px solid black"}}>
                 <Text ta="center" fz={26}>Expenses Breakdown</Text>
-                <Flex justify="space-between">
+                <Flex justify="space-between" sx={{'@media (max-width: 450px)': {flexDirection: "column"}}}>
                     <Box p="md" sx={{border: "2px solid black"}}>
                         <Text>Total Expenses Today</Text>
                         <Text><strong>SDG {data?.expenses?.today}</strong></Text>
@@ -93,10 +96,16 @@ function Analytics() {
                     <Text><strong>{data?.distribution?.pendingCount}</strong></Text>
                 </Box>
             </Grid.Col>
-            <Grid.Col span={3}>
+            <Grid.Col span={2}>
                 <Box p="md" sx={{border: "2px solid black"}}>
                     <Text>Pending Payment Amount</Text>
                     <Text><strong>SDG {data?.distribution?.pendingAmount}</strong></Text>
+                </Box>
+            </Grid.Col>
+            <Grid.Col span={2}>
+                <Box p="md" sx={{border: "2px solid black"}}>
+                    <Text>Distributed Quantity</Text>
+                    <Text><strong>SDG {data?.distribution?.distributionsQuantityWeek}</strong></Text>
                 </Box>
             </Grid.Col>
             <Grid.Col span={2}>
@@ -111,7 +120,7 @@ function Analytics() {
                     <Text><strong>{data?.distribution?.distributionsWeek}</strong></Text>
                 </Box>
             </Grid.Col>
-            <Grid.Col span={3}>
+            <Grid.Col span={2}>
                 <Box p="md" sx={{border: "2px solid black"}}>
                     <Text>Expected weekly revenue</Text>
                     <Text><strong>450</strong></Text>

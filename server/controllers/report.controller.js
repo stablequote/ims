@@ -341,10 +341,20 @@ exports.getAnalytics = async (req, res) => {
 
     // console.log("Distributions log:", distributionsToday[0].quantity)
 
-    const distributionsWeek = await Distribution.aggregate([
+    const distributionsWeek = await Distribution
+    .aggregate([
       { $match: { createdAt: { $gte: startOfWeek, $lte: endOfWeek } } },
-      { $count: "quantity" },
+      {$count: "quantity"},
     ]);
+    const distributionsQuantityWeek = await Distribution
+    .aggregate([
+      { $match: { createdAt: { $gte: startOfWeek, $lte: endOfWeek } } },
+      {$group: {
+        _id: null,
+        quantity: { $sum: "$quantity" },
+    },},
+    ]);
+    console.log("Weekly Distributions Quantity: ", distributionsQuantityWeek)
 
     // 6. Inventory
     const inventory = await Inventory.aggregate([
@@ -378,6 +388,7 @@ exports.getAnalytics = async (req, res) => {
         pendingAmount: pendingDistributions[0]?.totalAmount || 0,
         distributionsToday: distributionsToday[0]?.quantity || 0,
         distributionsWeek: distributionsWeek[0]?.quantity || 0,
+        distributionsQuantityWeek: distributionsQuantityWeek[0].quantity || 0,
       },
       inventory: {
         availableStock: inventory[0]?.totalStock || 0,
