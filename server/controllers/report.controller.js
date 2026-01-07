@@ -226,9 +226,11 @@ exports.getAnalytics = async (req, res) => {
     const endOfDay = new Date(now);
     endOfDay.setHours(23, 59, 59, 999);
 
-    // week boundaries
+    // Week starts on Saturday
     const startOfWeek = new Date(now);
-    startOfWeek.setDate(now.getDate() - now.getDay()); // Sunday.
+    const diffToSaturday = (now.getDay() + 1) % 7;
+
+    startOfWeek.setDate(now.getDate() - diffToSaturday);
     startOfWeek.setHours(0, 0, 0, 0);
 
     const endOfWeek = new Date(startOfWeek);
