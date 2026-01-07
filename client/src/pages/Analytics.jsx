@@ -105,7 +105,7 @@ function Analytics() {
             <Grid.Col span={2}>
                 <Box p="md" sx={{border: "2px solid black"}}>
                     <Text>Distributed Quantity</Text>
-                    <Text><strong>SDG {data?.distribution?.distributionsQuantityWeek}</strong></Text>
+                    <Text><strong>{data?.distribution?.distributionsQuantityWeek}</strong></Text>
                 </Box>
             </Grid.Col>
             <Grid.Col span={2}>
