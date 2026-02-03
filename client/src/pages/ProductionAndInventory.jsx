@@ -186,25 +186,7 @@ function ProductionAndInventory() {
   return (
     <Container size="100%" sx={{height: "80vh"}}>
         <Grid>
-            <Grid.Col span={9}>
-                <Box p="md" sx={{ border: "2px solid black"}}> 
-                    <Title ta="center">الإنتاج</Title>
-                    <Button mb="xs" color="green" onClick={() => setOpened(true)}>إضافة إنتاج</Button>
-                    <CustomTable 
-                        columns={productionColumns}
-                        data={stock}
-                        renderTopToolbarCustomActions={customTableOptions.renderTopToolbarCustomActions}
-                        renderRowActions={customTableOptions.renderRowActions}
-                        // onRowSelectionChange={customTableOptions.onRowSelectionChange}
-                        onRowClick={(row) => setSelectedResult(row)}
-                        rowSelection={rowSelection}
-                        setRowSelection={setRowSelection}
-                        checkedRow={checkedRow}
-                        setCheckedRow={setCheckedRow}
-                    />
-                </Box>
-            </Grid.Col>
-            <Grid.Col span={3}>
+             <Grid.Col span={12}>
                 <Box p="md" sx={{ border: "2px dotted black"}}>
                     <Title mb="xl" ta="center">المخزن</Title>
                     {/* total production today - current stock - number of flips today */}
@@ -219,6 +201,24 @@ function ProductionAndInventory() {
                     <Text><strong>التوزيع اليوم:</strong> {totalDistributionsToday}</Text>
                     <Text><strong>توزيعات اليوم غير المدفوعة: </strong> {totalOpenDistributionsToday}</Text>
                     <Text><strong>إجمالي التوزيعات: </strong> {totalDistributions}</Text>
+                </Box>
+            </Grid.Col>
+            <Grid.Col span={12}>
+                <Box p="md"> 
+                    <Title ta="center">الإنتاج</Title>
+                    <Button mb="xs" color="green" onClick={() => setOpened(true)}>إضافة إنتاج</Button>
+                    <CustomTable 
+                        columns={productionColumns}
+                        data={stock}
+                        renderTopToolbarCustomActions={customTableOptions.renderTopToolbarCustomActions}
+                        renderRowActions={customTableOptions.renderRowActions}
+                        // onRowSelectionChange={customTableOptions.onRowSelectionChange}
+                        onRowClick={(row) => setSelectedResult(row)}
+                        rowSelection={rowSelection}
+                        setRowSelection={setRowSelection}
+                        checkedRow={checkedRow}
+                        setCheckedRow={setCheckedRow}
+                    />
                 </Box>
             </Grid.Col>
         </Grid>

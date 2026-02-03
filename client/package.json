@@ -15,7 +15,7 @@
     "@mantine/form": "^6.0.22",
     "@mantine/notifications": "^6.0.22",
     "@tabler/icons": "^3.29.0",
-    "@tabler/icons-react": "^3.29.0",
+    "@tabler/icons-react": "^3.36.1",
     "@yudiel/react-qr-scanner": "^2.1.0",
     "axios": "^1.7.9",
     "chart.js": "^4.5.0",

@@ -6,7 +6,6 @@ import axios, { Axios } from 'axios';
 import moment from 'moment';
 import ExpenseModal from '../components/ExpenseModal';
 import { showNotification } from '@mantine/notifications';
-import { IconCategory } from '@tabler/icons-react';
 import PurchaseModal from '../components/PurchaseModal'
 
 function Purchases() {

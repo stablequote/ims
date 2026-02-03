@@ -1,61 +1,148 @@
-import { AppShell, Header, Flex, Button, Group, Stack, Footer, Box, Text, Drawer, Burger } from '@mantine/core';
-import AppNavbar from './Navbar';
-import { Outlet } from 'react-router-dom';
-import { useDisclosure } from '@mantine/hooks';
-import DashboardHeader from './DashboardHeader';
+import {
+  AppShell,
+  Drawer,
+  Burger,
+  Group,
+  Box,
+  Flex,
+  Text,
+  Image
+} from '@mantine/core';
+import { NavLink, Outlet } from 'react-router-dom';
+import { useDisclosure, useMediaQuery } from '@mantine/hooks';
 import { useEffect, useState } from 'react';
 
+import AppNavbar from './Navbar';
+import DashboardHeader from './DashboardHeader';
+import Logo from '../assets/logo.png'
+
 function DashboardWrapper({ changeLanguage, value }) {
-  const [opened, { open, close }] = useDisclosure(false);
-  const [remaining, setRemaining] = useState("");
+  // const [drawerOpened, { toggle, close }] = useDisclosure(false);
+  const [drawerOpened, setDrawerOpened] = useState(false);
+
+  const isMobile = useMediaQuery('(max-width: 768px)');
+  const [remaining, setRemaining] = useState('');
+  const [mounted, setMounted] = useState(false);
+
+  const storedUser = localStorage.getItem("user");
+  const user = storedUser ? JSON.parse(storedUser) : null;
+
+  const activeStyle = {
+    backgroundColor: '#5d5c5fff', // Light background for the active link
+    fontWeight: 'bold',        // Highlight the text
+    borderRadius: '4px',       // Rounded edges for better UI
+  };
 
   useEffect(() => {
-    const user = JSON.parse(localStorage.getItem("user"))
-    if (user?.role !== "staff") return; // Skip for managers and owners
+    const user = JSON.parse(localStorage.getItem('user'));
+    if (user?.role !== 'staff') return;
 
     const interval = setInterval(() => {
-      const end = new Date(localStorage.getItem("shiftEndTime"));
+      const end = new Date(localStorage.getItem('shiftEndTime'));
       const now = new Date();
       const diff = end - now;
 
-      if(diff <= 0) {
+      if (diff <= 0) {
         clearInterval(interval);
-        alert("Your shift has ended. Logging you out!")
+        alert('Your shift has ended. Logging you out!');
         handleLogout();
       } else {
         const h = Math.floor(diff / 3600000);
         const m = Math.floor((diff % 3600000) / 60000);
-        const s = Math.floor((diff % 60000) / 1000)
-        setRemaining(`${h}h ${m}m ${s}s`)
+        const s = Math.floor((diff % 60000) / 1000);
+        setRemaining(`${h}h ${m}m ${s}s`);
       }
-      return () => clearInterval(interval);
     }, 1000);
-  }, [])
+
+    return () => clearInterval(interval);
+  }, []);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) return null;
 
   const handleLogout = () => {
     localStorage.clear();
-    window.location.href = "/login"
-  }
+    window.location.href = '/login';
+  };
 
   return (
-    <AppShell
-      padding="md"
-      navbar={<AppNavbar />}
-      header={<DashboardHeader changeLanguage={changeLanguage} value={value} shiftRemainingTime={remaining} />}
-      // footer={
-      //   <Box height={60} p="xs">
-      //     <Text align="center">© 2025 Pharmacy Inc.</Text>
-      //   </Box>
-      // }
-      styles={(theme) => ({
-        main: { backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[8] : theme.colors.gray[0] },
-      })}
-    >
-      {/* Your application here */}
-      <Outlet />
-        {/* <AppNavbar /> */}
-    </AppShell>
+    <>
+      {/* 🔹 MOBILE DRAWER NAVIGATION */}
+      <Drawer
+        opened={drawerOpened}
+        onClose={() => setDrawerOpened(false)}
+        title="AEIS"
+        padding="md"
+        size="250px"
+        overlayOpacity={0.5}
+        // style={{ background: '#1D242E !important' }}
+        styles={(theme) => ({
+          body: {
+            backgroundColor:
+              theme.colorScheme === 'dark'
+                ? theme.colors.dark[8]
+                : "#1c3448",
+            paddingTop: 10,
+          },
+        })}
+      >
+        <AppNavbar onNavigate={() => setDrawerOpened(false)}/>
+      </Drawer>
+
+      <AppShell
+        padding="md"
+        sx={{ backgroundColor: "steelblue" }}
+        navbar={
+          !isMobile ? (
+            <AppNavbar />
+          ) : null
+        }
+        header={
+          <Box
+            sx={{
+              height: 56,
+              display: 'flex',
+              alignItems: 'center',
+              paddingInline: 16,
+            }}
+          >
+            <Group w="100%" position="apart">
+              {/* <Text ta="center" color="white">AEIS</Text> */}
+              <Image
+                src={Logo}
+                width={120}
+                height={80}
+                alt='AEIS'
+                fit="contain"
+              />
+              {/* Burger only on mobile */}
+              {isMobile && (
+                <Burger
+                  opened={drawerOpened}
+                   onClick={() => setDrawerOpened(true)}
+                  color="white"
+                />
+              )}
+            </Group>
+          </Box>
+        }
+        styles={(theme) => ({
+          main: {
+            backgroundColor:
+              theme.colorScheme === 'dark'
+                ? theme.colors.dark[8]
+                : theme.colors.gray[0],
+            paddingTop: 10,
+          },
+        })}
+      >
+        <Outlet />
+      </AppShell>
+    </>
   );
 }
 
-export default DashboardWrapper
+export default DashboardWrapper;

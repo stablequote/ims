@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react'
-import { Box, Center, Container, Flex, Grid, Loader, Text, Title } from '@mantine/core'
+import { Box, Center, Container, Flex, Grid, Loader, Skeleton, Text, Title } from '@mantine/core'
 import { showNotification } from '@mantine/notifications';
 import axios from 'axios';
+import StatCard from '../components/StatCard';
 
 function Analytics() {
     const [data, setData] = useState([]);
@@ -29,140 +30,173 @@ function Analytics() {
         const url = `${BASE_URL}/reports/analytics`;
         fetchData(url)
     }, [])
+  
   return (
-    <Container size="100%">
-        <Title ta="center">Analytics Page</Title>
-        <Grid mt="md" sx={{'@media (max-width: 450px)': {
-          display: "flex",
-          flexDirection: "column"
-        },}}>
-            <Grid.Col span={4} sx={{border: "2px solid black"}}>
-                <Text ta="center" fz={26}>Expenses Breakdown</Text>
-                <Flex justify="space-between" sx={{'@media (max-width: 450px)': {flexDirection: "column"}}}>
-                    <Box p="md" sx={{border: "2px solid black"}}>
-                        <Text>Total Expenses Today</Text>
-                        <Text><strong>SDG {data?.expenses?.today}</strong></Text>
-                    </Box>
-                    <Box p="md" sx={{border: "2px solid black"}}>
-                        <Text>Total Expenses This week</Text>
-                        <Text><strong>SDG {data?.expenses?.week}</strong></Text>
-                    </Box>
-                    <Box p="md" sx={{border: "2px solid black"}}>
-                        <Text>Average Expenses per week</Text>
-                        <Text><strong>SDG {data?.expenses?.avgWeekly}</strong></Text>
-                    </Box>
-                </Flex>
-            </Grid.Col>
-            <Grid.Col span={4} sx={{border: "2px solid black"}}>
-                <Text ta="center" fz={26}>Purchases Breakdown</Text>
-                <Flex justify="space-between">
-                    <Box p="md" sx={{border: "2px solid black"}}>
-                        <Text>Purchases Today</Text>
-                        <Text><strong>SDG {data?.purchases?.today}</strong></Text>
-                    </Box>
-                    <Box p="md" sx={{border: "2px solid black"}}>
-                        <Text>Purchases This week</Text>
-                        <Text><strong>SDG {data?.purchases?.week}</strong></Text>
-                    </Box>
-                    <Box p="md" sx={{border: "2px solid black"}}>
-                        <Text>Average Purchases per week</Text>
-                        <Text><strong>SDG {data?.purchases?.avgWeekly}</strong></Text>
-                    </Box>
-                </Flex>
-            </Grid.Col>
-            <Grid.Col span={4} sx={{border: "2px solid black"}}>
-                <Text ta="center" fz={26}>Production Breakdown</Text>
-                <Flex justify="space-between">
-                    <Box p="md" sx={{border: "2px solid black"}}>
-                        <Text>Production Today</Text>
-                        <Text><strong>{data?.production?.today}</strong></Text>
-                    </Box>
-                    <Box p="md" sx={{border: "2px solid black"}}>
-                        <Text>Production Flips Today</Text>
-                        <Text><strong>{data?.production?.flipsToday}</strong></Text>
-                    </Box>
-                    <Box p="md" sx={{border: "2px solid black"}}>
-                        <Text>Weekly Total Production</Text>
-                        <Text><strong>{data?.production?.week}</strong></Text>
-                    </Box>
-                </Flex>
-            </Grid.Col>
-        </Grid>
-        <Text mt="md" ta="center" fz={26}>Distribution Breakdown</Text>
-        <Grid >
-            <Grid.Col span={2}>
-                <Box p="md" sx={{border: "2px solid black"}}>
-                    <Text>Payment Pending</Text>
-                    <Text><strong>{data?.distribution?.pendingCount}</strong></Text>
-                </Box>
-            </Grid.Col>
-            <Grid.Col span={2}>
-                <Box p="md" sx={{border: "2px solid black"}}>
-                    <Text>Pending Payment Amount</Text>
-                    <Text><strong>SDG {data?.distribution?.pendingAmount}</strong></Text>
-                </Box>
-            </Grid.Col>
-            <Grid.Col span={2}>
-                <Box p="md" sx={{border: "2px solid black"}}>
-                    <Text>Distributed Quantity</Text>
-                    <Text><strong>{data?.distribution?.distributionsQuantityWeek}</strong></Text>
-                </Box>
-            </Grid.Col>
-            <Grid.Col span={2}>
-                <Box p="md" sx={{border: "2px solid black"}}>
-                    <Text>Distributions Today</Text>
-                    <Text><strong>{data?.distribution?.distributionsToday}</strong></Text>
-                </Box>
-            </Grid.Col>
-            <Grid.Col span={2}>
-                <Box p="md" sx={{border: "2px solid black"}}>
-                    <Text>Distributions this week</Text>
-                    <Text><strong>{data?.distribution?.distributionsWeek}</strong></Text>
-                </Box>
-            </Grid.Col>
-            <Grid.Col span={2}>
-                <Box p="md" sx={{border: "2px solid black"}}>
-                    <Text>Expected weekly revenue</Text>
-                    <Text><strong>450</strong></Text>
-                </Box>
-            </Grid.Col>
-        </Grid>
-        <Text my="md" ta="center" fz={26}>Cost & Revenue</Text>
-        <Grid>
-            <Grid.Col span={4} sx={{border: "2px solid black"}}>
-                <Box p="md" sx={{border: "2px solid black"}}>
-                    <Text>Unit Cost</Text>
-                    <Text><strong>SDG {data?.revenue?.unitCost?.unitCost}</strong></Text>
-                </Box>
-            </Grid.Col>
-            <Grid.Col span={4} sx={{border: "2px solid black"}}>
-                <Box p="md" sx={{border: "2px solid black"}}>
-                    <Text>Income Today</Text>
-                    <Text><strong>SDG {Math.floor(data?.revenue?.netToday) || 0}</strong></Text>
-                </Box>
-            </Grid.Col>
-            <Grid.Col span={4} sx={{border: "2px solid black"}}>
-                <Box p="md" sx={{border: "2px solid black"}}>
-                    <Text>Weekly Revenue</Text>
-                    <Text><strong>SDG {data?.revenue?.netWeek || 0}</strong></Text>
-                </Box>
-            </Grid.Col>
-        </Grid>
-        <Text my="md" ta="center" fz={26}>Inventory</Text>
-        <Grid>
-            <Grid.Col>
-                <Box p="md" sx={{border: "2px solid black"}}>
-                    <Text>Current Stock</Text>
-                    <Text><strong>{data?.inventory?.availableStock || 0}</strong></Text>
-                </Box>
-            </Grid.Col>
-        </Grid>
-        {
-            loading && 
-            <Center>
-                <Loader variant='dots' color="green" size={36} />
-            </Center>
-        }
+    <Container size="xl">
+      <Title ta="center" mb="md">
+        Analytics
+      </Title>
+
+      {/* ================= EXPENSES ================= */}
+      <Title order={4} mb="xs">
+        Expenses
+      </Title>
+      <Grid>
+        <Grid.Col xs={12} sm={4}>
+          <StatCard
+            title="Expenses Today"
+            value={`SDG ${data?.expenses?.today || 0}`}
+          />
+        </Grid.Col>
+        <Grid.Col xs={12} sm={4}>
+          <StatCard
+            title="Expenses This Week"
+            value={`SDG ${data?.expenses?.week || 0}`}
+          />
+        </Grid.Col>
+        <Grid.Col xs={12} sm={4}>
+          <StatCard
+            title="Avg Weekly Expenses"
+            value={`SDG ${data?.expenses?.avgWeekly || 0}`}
+          />
+        </Grid.Col>
+      </Grid>
+
+      {/* ================= PURCHASES ================= */}
+      <Title order={4} mt="lg" mb="xs">
+        Purchases
+      </Title>
+      <Grid>
+        <Grid.Col xs={12} sm={4}>
+          <StatCard
+            title="Purchases Today"
+            value={`SDG ${data?.purchases?.today || 0}`}
+          />
+        </Grid.Col>
+        <Grid.Col xs={12} sm={4}>
+          <StatCard
+            title="Purchases This Week"
+            value={`SDG ${data?.purchases?.week || 0}`}
+          />
+        </Grid.Col>
+        <Grid.Col xs={12} sm={4}>
+          <StatCard
+            title="Avg Weekly Purchases"
+            value={`SDG ${data?.purchases?.avgWeekly || 0}`}
+          />
+        </Grid.Col>
+      </Grid>
+
+      {/* ================= PRODUCTION ================= */}
+      <Title order={4} mt="lg" mb="xs">
+        Production
+      </Title>
+      <Grid>
+        <Grid.Col xs={12} sm={4}>
+          <StatCard
+            title="Production Today"
+            value={data?.production?.today || 0}
+          />
+        </Grid.Col>
+        <Grid.Col xs={12} sm={4}>
+          <StatCard
+            title="Flips Today"
+            value={data?.production?.flipsToday || 0}
+          />
+        </Grid.Col>
+        <Grid.Col xs={12} sm={4}>
+          <StatCard
+            title="Weekly Production"
+            value={data?.production?.week || 0}
+          />
+        </Grid.Col>
+      </Grid>
+
+      {/* ================= DISTRIBUTION ================= */}
+      <Title order={4} mt="lg" mb="xs">
+        Distribution
+      </Title>
+      <Grid>
+        <Grid.Col xs={12} sm={4}>
+          <StatCard
+            title="Pending Payments"
+            value={data?.distribution?.pendingCount || 0}
+          />
+        </Grid.Col>
+        <Grid.Col xs={12} sm={4}>
+          <StatCard
+            title="Pending Amount"
+            value={`SDG ${data?.distribution?.pendingAmount || 0}`}
+          />
+        </Grid.Col>
+        <Grid.Col xs={12} sm={4}>
+          <StatCard
+            title="Distributed Qty (Week)"
+            value={data?.distribution?.distributionsQuantityWeek || 0}
+          />
+        </Grid.Col>
+
+        <Grid.Col xs={12} sm={4}>
+          <StatCard
+            title="Distributions Today"
+            value={data?.distribution?.distributionsToday || 0}
+          />
+        </Grid.Col>
+        <Grid.Col xs={12} sm={4}>
+          <StatCard
+            title="Distributions This Week"
+            value={data?.distribution?.distributionsWeek || 0}
+          />
+        </Grid.Col>
+        <Grid.Col xs={12} sm={4}>
+          <StatCard title="Expected Weekly Revenue" value="SDG 450" />
+        </Grid.Col>
+      </Grid>
+
+      {/* ================= REVENUE ================= */}
+      <Title order={4} mt="lg" mb="xs">
+        Revenue
+      </Title>
+      <Grid>
+        <Grid.Col xs={12} sm={4}>
+          <StatCard
+            title="Unit Cost"
+            value={`SDG ${data?.revenue?.unitCost?.unitCost || 0}`}
+          />
+        </Grid.Col>
+        <Grid.Col xs={12} sm={4}>
+          <StatCard
+            title="Income Today"
+            value={`SDG ${Math.floor(data?.revenue?.netToday) || 0}`}
+          />
+        </Grid.Col>
+        <Grid.Col xs={12} sm={4}>
+          <StatCard
+            title="Weekly Revenue"
+            value={`SDG ${data?.revenue?.netWeek || 0}`}
+          />
+        </Grid.Col>
+      </Grid>
+
+      {/* ================= INVENTORY ================= */}
+      <Title order={4} mt="lg" mb="xs">
+        Inventory
+      </Title>
+      <Grid>
+        <Grid.Col xs={12} sm={4}>
+          <StatCard
+            title="Available Stock"
+            value={data?.inventory?.availableStock || 0}
+          />
+        </Grid.Col>
+      </Grid>
+
+      {loading && (
+        <Center mt="lg">
+          {/* <Loader variant="dots" size="lg" /> */}
+          <Skeleton height={50} circle mb="xl"  />
+        </Center>
+      )}
     </Container>
   )
 }
