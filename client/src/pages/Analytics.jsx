@@ -131,15 +131,20 @@ function Analytics() {
         </Grid.Col>
         <Grid.Col xs={12} sm={4}>
           <StatCard
-            title="Distributed Qty (Week)"
-            value={data?.distribution?.distributionsQuantityWeek || 0}
+            title="Distributed Qty Today"
+            value={data?.distribution?.distributionsQuantityToday || 0}
           />
         </Grid.Col>
-
         <Grid.Col xs={12} sm={4}>
           <StatCard
             title="Distributions Today"
             value={data?.distribution?.distributionsToday || 0}
+          />
+        </Grid.Col>
+        <Grid.Col xs={12} sm={4}>
+          <StatCard
+            title="Distributed Qty (Week)"
+            value={data?.distribution?.distributionsQuantityWeek || 0}
           />
         </Grid.Col>
         <Grid.Col xs={12} sm={4}>

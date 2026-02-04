@@ -339,6 +339,15 @@ exports.getAnalytics = async (req, res) => {
       { $count: "quantity" },
     ]);
 
+    const distributionsQuantityToday = await Distribution
+    .aggregate([
+      { $match: { createdAt: { $gte: startOfDay, $lte: endOfDay } } },
+      {$group: {
+        _id: null,
+        quantity: { $sum: "$quantity" },
+    },},
+    ]);
+
     // console.log("Distributions log:", distributionsToday[0].quantity)
 
     const distributionsWeek = await Distribution
@@ -346,6 +355,7 @@ exports.getAnalytics = async (req, res) => {
       { $match: { createdAt: { $gte: startOfWeek, $lte: endOfWeek } } },
       {$count: "quantity"},
     ]);
+
     const distributionsQuantityWeek = await Distribution
     .aggregate([
       { $match: { createdAt: { $gte: startOfWeek, $lte: endOfWeek } } },
@@ -354,6 +364,7 @@ exports.getAnalytics = async (req, res) => {
         quantity: { $sum: "$quantity" },
     },},
     ]);
+
     console.log("Weekly Distributions Quantity: ", distributionsQuantityWeek)
 
     // 6. Inventory
@@ -387,6 +398,7 @@ exports.getAnalytics = async (req, res) => {
         pendingCount: pendingDistributions[0]?.count || 0,
         pendingAmount: pendingDistributions[0]?.totalAmount || 0,
         distributionsToday: distributionsToday[0]?.quantity || 0,
+        distributionsQuantityToday: distributionsQuantityToday[0]?.quantity || 0,
         distributionsWeek: distributionsWeek[0]?.quantity || 0,
         distributionsQuantityWeek: distributionsQuantityWeek[0].quantity || 0,
       },
