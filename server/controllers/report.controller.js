@@ -189,29 +189,21 @@ const calculateDynamicUnitCost = async (start, end) => {
     const totalExpenses = expenses[0]?.totalExpenses || 0;
     const totalPurchases = purchases[0]?.totalPurchases || 0;
     const totalQuantity = productions[0]?.totalQuantity || 0;
+    const totalQuantityValue = totalQuantity * 0.35 || 0;
 
     const totalCost = totalExpenses + totalPurchases;
     const unitCost = totalQuantity > 0 ? totalCost / totalQuantity : 0;
 
-    // res.status(200).json({
-    //   success: true,
-    //   totalExpenses,
-    //   totalPurchases,
-    //   totalQuantity,
-    //   unitCost,
-    // });
+    const netUnitCost = (totalQuantityValue - (totalExpenses + totalPurchases)) / totalQuantity
+
     return {
       totalExpenses,
       totalPurchases,
       totalQuantity,
-      unitCost,
+      unitCost: netUnitCost,
     }
   } catch (error) {
     console.error("Error calculating dynamic unit cost:", error);
-    // res.status(500).json({
-    //   success: false,
-    //   message: "Server Error",
-    // });
   }
 };
 
@@ -237,6 +229,22 @@ exports.getAnalytics = async (req, res) => {
     endOfWeek.setDate(startOfWeek.getDate() + 6);
     endOfWeek.setHours(23, 59, 59, 999);
 
+    // Start of current month
+    const startOfMonth = new Date(
+      now.getFullYear(),
+      now.getMonth(),
+      1,
+      0, 0, 0, 0
+    );
+
+    // End of current month
+    const endOfMonth = new Date(
+      now.getFullYear(),
+      now.getMonth() + 1,
+      0,
+      23, 59, 59, 999
+    );
+
     // 1. Expenses
     const expensesToday = await Expenses.aggregate([
       { $match: { createdAt: { $gte: startOfDay, $lte: endOfDay } } },
@@ -245,6 +253,11 @@ exports.getAnalytics = async (req, res) => {
 
     const expensesWeek = await Expenses.aggregate([
       { $match: { createdAt: { $gte: startOfWeek, $lte: endOfWeek } } },
+      { $group: { _id: null, total: { $sum: "$amount" } } },
+    ]);
+
+    const expensesMonth = await Expenses.aggregate([
+      { $match: { createdAt: { $gte: startOfMonth, $lte: endOfMonth } } },
       { $group: { _id: null, total: { $sum: "$amount" } } },
     ]);
 
@@ -266,6 +279,11 @@ exports.getAnalytics = async (req, res) => {
 
     const purchasesWeek = await Purchases.aggregate([
       { $match: { createdAt: { $gte: startOfWeek, $lte: endOfWeek } } },
+      { $group: { _id: null, total: { $sum: "$totalCost" } } },
+    ]);
+
+    const purchasesMonth = await Purchases.aggregate([
+      { $match: { createdAt: { $gte: startOfMonth, $lte: endOfMonth } } },
       { $group: { _id: null, total: { $sum: "$totalCost" } } },
     ]);
 
@@ -295,8 +313,13 @@ exports.getAnalytics = async (req, res) => {
       { $group: { _id: null, totalQty: { $sum: "$quantity" } } },
     ]);
 
+    const productionMonth = await Production.aggregate([
+      { $match: { createdAt: { $gte: startOfMonth, $lte: endOfMonth } } },
+      { $group: { _id: null, totalQty: { $sum: "$quantity" } } },
+    ]);
+
     // 4. Revenue
-    const unitCost = await calculateDynamicUnitCost(startOfWeek, endOfWeek);
+    const unitCost = await calculateDynamicUnitCost(startOfMonth, endOfMonth);
     // console.log("Unit Cost: ", unitCost)
 
     const revenueToday = await Distribution.aggregate([
@@ -377,17 +400,20 @@ exports.getAnalytics = async (req, res) => {
       expenses: {
         today: expensesToday[0]?.total || 0,
         week: expensesWeek[0]?.total || 0,
+        month: expensesMonth[0]?.total || 0,
         avgWeekly: avgWeeklyExpenses[0]?.avg || 0,
       },
       purchases: {
         today: purchasesToday[0]?.total || 0,
         week: purchasesWeek[0]?.total || 0,
+        purchasesMonth: purchasesMonth[0]?.total || 0,
         avgWeekly: avgWeeklyPurchases[0]?.avg || 0,
       },
       production: {
         today: productionToday[0]?.totalQty || 0,
         flipsToday: productionFlipsToday[0]?.flips || 0,
         week: productionWeek[0]?.totalQty || 0,
+        productionMonth: productionMonth[0]?.totalQty || 0,
       },
       revenue: {
         unitCost,
