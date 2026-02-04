@@ -37,6 +37,19 @@ function Analytics() {
         Analytics
       </Title>
 
+        {/* ================= INVENTORY ================= */}
+      <Title order={4} mt="lg" mb="xs">
+        Inventory
+      </Title>
+      <Grid mb="sm">
+        <Grid.Col xs={12} sm={4}>
+          <StatCard
+            title="Available Stock"
+            value={data?.inventory?.availableStock || 0}
+          />
+        </Grid.Col>
+      </Grid>
+
       {/* ================= EXPENSES ================= */}
       <Title order={4} mb="xs">
         Expenses
@@ -179,19 +192,6 @@ function Analytics() {
           <StatCard
             title="Weekly Revenue"
             value={`SDG ${data?.revenue?.netWeek || 0}`}
-          />
-        </Grid.Col>
-      </Grid>
-
-      {/* ================= INVENTORY ================= */}
-      <Title order={4} mt="lg" mb="xs">
-        Inventory
-      </Title>
-      <Grid>
-        <Grid.Col xs={12} sm={4}>
-          <StatCard
-            title="Available Stock"
-            value={data?.inventory?.availableStock || 0}
           />
         </Grid.Col>
       </Grid>
